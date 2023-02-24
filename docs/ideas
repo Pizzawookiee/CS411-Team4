@@ -5,3 +5,11 @@ Transferring songs from Shazam to Spotify and/or generating recommendations from
 
 
 An app that finds the best car to buy, looking at factors such as location (city vs country), weather trends, geography, available prices
+
+An app that pulls from weather data, Instagram API (hashtags), local event calendars, maybe other sources to generate an excuse for missing an event using ChatGPT 
+
+
+Tech stack ideas:
+MongoDB
+React.js
+
