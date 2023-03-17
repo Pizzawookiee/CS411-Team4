@@ -8,9 +8,9 @@ An app that finds the best car to buy, looking at factors such as location (city
 
 An app that uses location of workplace to pull from weather data, Instagram API (hashtags), local event calendars, maybe other sources to generate an excuse for missing an event using ChatGPT 
 
+NEW IDEA 3/17: Take Spotify data ...
 
-Tech stack ideas:
-MongoDB
+Tech stack ideas:MongoDB
 Flask
 React.js
 
