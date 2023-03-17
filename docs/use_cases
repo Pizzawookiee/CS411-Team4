@@ -1,1 +1,9 @@
 Put use cases here as bullet points.
+--> use case 1: user inputs a non-empty keyword, and the
+system takes songs from playlist and ranks them based on association 
+(one method: generate related terms for each song title, then generate related
+terms to those related terms and keep going until the keyword appears in a related term
+
+
+--> use case 2: user inputs an empty keyword, and the
+system simply ranks all songs based on popularity
