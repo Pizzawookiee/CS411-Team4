@@ -2,7 +2,7 @@ Put use cases here as bullet points.
 --> use case 1: user inputs a non-empty keyword, and the
 system takes songs from playlist and ranks them based on association 
 (one method: generate related terms for each song title, then generate related
-terms to those related terms and keep going until the keyword appears in a related term
+terms to those related terms and keep going until the keyword appears in a related term. Additionally, song lyrics can be sourced (Genius API, if Spotify API doesn't have this functionality) and the keyword can be searched for in them as well.
 
 
 --> use case 2: user inputs an empty keyword, and the
