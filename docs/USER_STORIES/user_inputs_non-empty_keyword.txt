@@ -1,0 +1,14 @@
+The user logs into the app. They see the following two fields:
+
+Spotify playlist link: 
+
+Put in anything (or nothing) to rank songs by:
+
+
+The user puts in a valid Spotify playlist link for the first field, and an arbitrary non-empty keyword for the second field.
+
+The app returns a list of the songs, ranked by degrees of separation from the keyword. A potential output is as follows:
+
+1. <TITLE OF MOST POPULAR SONG>
+2. <TITLE OF SECOND MOST POPULAR SONG>
+3. ...
