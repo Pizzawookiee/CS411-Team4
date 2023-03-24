@@ -1,6 +1,14 @@
 const puppeteer = require("puppeteer-extra");
-const StealthPlugin = require("puppeteer-extra-plugin-stealth");puppeteer.use(StealthPlugin());const searchQueries = ["Mercedes"]; // what we want to search (for interestOverTime, interestByRegion, relatedQueries, relatedTopics)
-// const searchQueries = ["Mercedes", "BMW", "Audi"];    // what we want to search (for interestOverTime, comparedByRegion, interestByRegion, relatedQueries)const URL = `https://trends.google.com/trends/explore?q=${encodeURI(searchQueries.join(","))}&hl=en`;async function getGoogleTrendsResults() {
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+
+puppeteer.use(StealthPlugin());
+
+const searchQueries = ["Mercedes"]; // what we want to search (for interestOverTime, interestByRegion, relatedQueries, relatedTopics)
+// const searchQueries = ["Mercedes", "BMW", "Audi"];    // what we want to search (for interestOverTime, comparedByRegion, interestByRegion, relatedQueries)
+
+const URL = `https://trends.google.com/trends/explore?q=${encodeURI(searchQueries.join(","))}&hl=en`;
+
+async function getGoogleTrendsResults() {
   const browser = await puppeteer.launch({
     headless: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -14,7 +22,9 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");puppeteer.use(St
   const comparedByRegion = [];
   const interestByRegion = [];
   const relatedQueries = [];
-  const relatedTopics = {};  const valuePattern = /%22value%22:%22(?<value>[^%]+)/gm; //https://regex101.com/r/PNcP1u/1  page.on("response", async (response) => {
+  const relatedTopics = {}; 
+  const valuePattern = /%22value%22:%22(?<value>[^%]+)/gm; //https://regex101.com/r/PNcP1u/1  
+  page.on("response", async (response) => {
     if (response.headers()["content-type"]?.includes("application/")) {
       const responseData = await response.text();
       const responseURL = await response.url();
@@ -112,6 +122,11 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");puppeteer.use(St
         }
       }
     }
-  });  await page.waitForTimeout(10000);
-  await browser.close();  return { interestOverTime, comparedByRegion, interestByRegion, relatedQueries, relatedTopics };
-}getGoogleTrendsResults().then((result) => console.dir(result, { depth: null }));
+  });
+  
+  await page.waitForTimeout(10000);
+  await browser.close();  
+  return { interestOverTime, comparedByRegion, interestByRegion, relatedQueries, relatedTopics };
+}
+
+getGoogleTrendsResults().then((result) => console.dir(result, { depth: null }));
