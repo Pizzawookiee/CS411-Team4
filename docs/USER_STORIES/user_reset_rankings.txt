@@ -1,0 +1,8 @@
+The user logs into the app. They see the following two fields:
+
+Spotify playlist link: 
+
+Put in anything (or nothing) to rank songs by:
+
+
+The user puts in inputs for both fields. Regardless of output, a RESET button will pop up which will make the fields blank and remove the output.
