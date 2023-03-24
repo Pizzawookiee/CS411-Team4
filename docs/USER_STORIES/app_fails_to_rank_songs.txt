@@ -1,3 +1,7 @@
+As a frequent user of Spotify, I would like to have more information on the songs in my playlist such as rankings and other measurable statistics for the songs
+of my playlist. Spotify does not display a ranking of the songs on my playlists and it would be interesting to know the popularity of the songs
+I am listening to. 
+
 The user logs into the app. They see the following two fields:
 
 Spotify playlist link: 
@@ -9,3 +13,7 @@ The user puts in a Spotify playlist link for the first field, and any keyword (e
 The user inputs a valid Spotify playlist link and a keyword (empty or non-empty, doesn't matter). The app returns an error message like this:
 
 ERROR: UNABLE TO RANK SONGS
+Possible errors in ranking song:
+User inputs a invalid link or URL or the playlist is not set to public
+Limited information on a certain song in playlist resulting in missing ranking for certain songs. 
+
