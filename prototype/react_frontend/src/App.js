@@ -32,6 +32,7 @@ const WarningText = styled.p`
 
 function MyForm() {
   const [showWarning, setShowWarning] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const initialInputs = {
     playlist: '',
@@ -44,11 +45,12 @@ function MyForm() {
   //const [keyword, k_setInputs] = useState("");
 
   const handleSubmit = async(event) => {
+	//note: disable submit button until await finishes
     event.preventDefault();
     if (inputs.playlist === '') {
       setShowWarning(true);
     } else {
-		
+	  setIsSubmitting(true); //this disables the submit button	
 	  try {
         const response = await axios.post('http://localhost:5000/express_backend', inputs);
         console.log(response.data);
@@ -58,6 +60,7 @@ function MyForm() {
 		alert('error')
       }
 	  setShowWarning(false);
+	  setIsSubmitting(false); //re-enables button
       //console.log(inputs.playlist);
       //alert(`submitted ${inputs.playlist}, ${inputs.keyword}`);
     }
@@ -99,7 +102,7 @@ function MyForm() {
         </label>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "10px" }}>
           <Button onClick={handleReset}>Reset</Button>
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button onClick={handleSubmit} disabled={isSubmitting}  style={{ opacity: isSubmitting ? 0.5 : 1 }}>{isSubmitting ? "Submitting..." : "Submit"}</Button>
 		  {showWarning && <WarningText>Please enter a playlist URL</WarningText>}
         </div>
       </TextForm>
