@@ -48,9 +48,18 @@ function MyForm() {
     if (inputs.playlist === '') {
       setShowWarning(true);
     } else {
-      console.log(inputs.playlist);
-      setShowWarning(false);
-      alert(`submitted ${inputs.playlist}, ${inputs.keyword}`);
+		
+	  try {
+        const response = await axios.post('http://localhost:5000/express_backend', inputs);
+        console.log(response.data);
+		//alert('${response}')
+      } catch (error) {
+        console.error(error);
+		alert('error')
+      }
+	  setShowWarning(false);
+      //console.log(inputs.playlist);
+      //alert(`submitted ${inputs.playlist}, ${inputs.keyword}`);
     }
   }
 
@@ -99,13 +108,6 @@ function MyForm() {
   )
 }
 
-//function App() {
-//  return (
-//    <MyForm />
-//  );
-//}
-
-
 class App extends Component {
 state = {
     data: null
@@ -125,7 +127,7 @@ state = {
       throw Error(body.message) 
     }
     //return body;
-	alert(body);
+	//alert("Express backend connected");
   };
 
   render() {

@@ -11,8 +11,8 @@ app.use(cors());
 //POST route instructions
 app.post('/express_backend', (req, res) => {
   const { playlist, keyword } = req.body;
-  console.log('New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}');
-  res.status(200).send('Form submission received!');
+  //console.log('New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}');
+  res.status(200).send(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
 });
 
 // This displays message that the server running and listening to specified port
