@@ -76,8 +76,6 @@ function MyForm() {
 
   const handleReset = () => {
 	setInputs(initialInputs);
-    //p_setInputs('');
-    //k_setInputs('');
     setShowWarning(false);
   };
 
