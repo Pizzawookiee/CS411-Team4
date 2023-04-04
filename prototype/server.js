@@ -1,13 +1,20 @@
-const express = require('express'); //Line 1
-const app = express(); //Line 2
-const port = process.env.PORT || 5000; //Line 3
+const express = require('express'); 
+const app = express();
+require('dotenv').config();
+const port = process.env.PORT || 5000; 
 const bodyParser = require('body-parser');
 const { exec } = require('child_process');
-var cors = require("cors");
+const AuthRoutes = require('./routes/authRoutes.js');
+const cors = require("cors");
+const morgan = require('morgan');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors());
+app.use('/api', cors(), AuthRoutes);
+app.use(morgan('combined'));
+
 
 //POST route instructions
 app.post('/express_backend', (req, res) => {
@@ -21,15 +28,31 @@ app.post('/express_backend', (req, res) => {
     }
     console.log(`stdout: ${stdout}`);
     console.error(`stderr: ${stderr}`);
+	res.header("Access-Control-Allow-Origin", "*");
 	res.status(200).send(stdout) 
   });
   //res.status(200).send(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
 });
 
 // This displays message that the server running and listening to specified port
-app.listen(port, () => console.log(`Listening on port ${port}`)); //Line 6
+app.listen(port, () => console.log(`Listening on port ${port}`)); 
 
-// create a GET route
+// GET route instructions to prove express backend connected
 app.get('/express_backend', (req, res) => { //Line 9
-  res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); //Line 10
-}); //Line 11
+  res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); 
+}); 
+/*
+// API endpoint that returns the log data as JSON
+app.get('/logs', (req, res) => {
+  // Get the log buffer from the morgan middleware
+  const logs = req.app.get('morgan').buffer;
+  
+  // Split the logs into an array of lines
+  const lines = logs.trim().split('\n');
+  
+  // Map each line to an object with a "message" property
+  const logData = lines.map(line => ({ message: line }));
+
+  res.json(logData);
+});
+*/
