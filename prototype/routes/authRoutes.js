@@ -82,7 +82,7 @@ router.get('/logged', async (req, res) => {
     const param_address = `${process.env.CLIENT_REDIRECTURI}?${query}`;
 	const params = getHashParams(param_address);
 	console.log(params);
-	res.redirect('http://localhost:3000/'); //this needs to be here otherwise infinite loading
+	res.redirect('http://localhost:3000/'); //this needs to be here otherwise infinite loading, BUT this erases any forms.
   });
 });
 

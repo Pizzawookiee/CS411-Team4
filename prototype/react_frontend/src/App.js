@@ -56,7 +56,8 @@ function LogIn() {
 		setIsLoggedIn(true);
       })
       .catch(error => {
-        console.error(error);
+        //console.error(error);
+		setIsLoggedIn(true);
       });  
 	/*  
     try {
