@@ -56,9 +56,9 @@ function LogIn() {
 		setIsLoggedIn(true);
       })
       .catch(error => {
-        //console.error(error);
-		setIsLoggedIn(true);
-      });  
+        console.error(error);
+      });
+    setIsLoggedIn(true);	//this line UNTESTED; try later  
 	/*  
     try {
 	  await axios.get('http://localhost:5000/api/login');	
