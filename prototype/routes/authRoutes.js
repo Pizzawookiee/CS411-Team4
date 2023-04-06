@@ -5,6 +5,7 @@ const router = express.Router();
 //const fetch = require('node-fetch');
 const querystring = require('querystring');
 const cors = require('cors');
+const axios = require('axios');
 
 // this can be used as a seperate module
 const encodeFormData = (data) => {
@@ -65,6 +66,28 @@ router.get('/logged', async (req, res) => {
     client_secret: process.env.CLIENT_SECRET,
   }
 
+	try {
+	  const response = await axios.post('https://accounts.spotify.com/api/token', encodeFormData(body), {
+		headers: {
+		  "Content-Type": "application/x-www-form-urlencoded",
+		  "Accept": "application/json"
+		}
+	  });
+
+	  const data = response.data;
+	  const query = querystring.stringify(data);
+	  const param_address = `${process.env.CLIENT_REDIRECTURI}?${query}`;
+	  const params = getHashParams(param_address);
+	  console.log(params); //replace with SAVING TO A COOKIE WHICH IS RETRIEVED BY BACKEND, then FRONTEND retrieves BACKEND with get
+	  res.header("Access-Control-Allow-Origin", "*");
+	  //res.status(200).json(params);
+	  res.redirect('http://localhost:3000/');
+	} catch (error) {
+	  console.log(error);
+	  res.status(500).json({ message: "Error fetching data" });
+	}
+
+  /*	
   const fetch = await import('node-fetch');
   
   await fetch.default('https://accounts.spotify.com/api/token', {
@@ -82,8 +105,17 @@ router.get('/logged', async (req, res) => {
     const param_address = `${process.env.CLIENT_REDIRECTURI}?${query}`;
 	const params = getHashParams(param_address);
 	console.log(params);
-	res.redirect('http://localhost:3000/'); //this needs to be here otherwise infinite loading, BUT this erases any forms.
+	result = params;
+	//res.status(200).send(params) 
+	//return(params)
+	//res.redirect('http://localhost:3000/'); //this needs to be here otherwise infinite loading, BUT this erases any forms.
+	res.status(200).json(params);
+  })
+    .catch(error => {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching data" });
   });
+  */
 });
 
 module.exports = router;

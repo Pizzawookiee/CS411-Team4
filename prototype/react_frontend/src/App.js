@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import styled from "styled-components";
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const CenteredContainer = styled.div`
   display: flex;
@@ -44,32 +45,61 @@ const WarningText = styled.p`
   color: red;
 `;
 
+function LogIn() {
+  const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get('isLoggedIn') === 'true');
 
+  const handleLogIn = async () => {
+	//this block doesn't work for some reason  
+	/*  
+    try {	
+      const response = await axios.get('http://localhost:5000/api/login');
+      console.log(response.data);  
+      Cookies.set('isLoggedIn', true);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error(error);
+    }
+	*/
+	Cookies.set('isLoggedIn', true); 
+    
+  };
+  
+  const handleLogOut = async() => {
+    Cookies.remove('isLoggedIn');
+    setIsLoggedIn(false);
+  };
+
+  return (
+    <div>
+      {isLoggedIn ? (
+	    <>
+			<MyForm isLoggedIn={isLoggedIn} />
+			<LogInButton onClick={handleLogOut}>Log Out</LogInButton>
+		</>
+      ) : (
+	    <a href="http://localhost:5000/api/login">
+          <LogInButton onClick={handleLogIn}>Log In</LogInButton>
+		</a>
+      )}
+    </div>
+  );
+}
+
+/*
 function LogIn() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleLogIn = async () => {
 	  
-	axios.get('http://localhost:5000/api/login') //this is catching errors instead of moving on even with correct console log
-	  .then(response => {
-		console.log(response.data);
-		setIsLoggedIn(true);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    setIsLoggedIn(true);	//this line UNTESTED; try later  
-	/*  
-    try {
-	  await axios.get('http://localhost:5000/api/login');	
-	
+    try {	
       const response = await axios.get('http://localhost:5000/api/login');
       console.log(response.data);  
       setIsLoggedIn(true);
     } catch (error) {
       console.error(error);
     }
-	*/
+	setIsLoggedIn(true);
+	
   };
   
   const handleLogOut = async() => {
@@ -91,6 +121,9 @@ function LogIn() {
     </div>
   );
 }
+*/
+
+
 
 function MyForm({ isLoggedIn }) {
   const [showWarning, setShowWarning] = useState(false);
