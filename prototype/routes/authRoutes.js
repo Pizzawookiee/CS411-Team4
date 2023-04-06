@@ -137,8 +137,8 @@ router.get('/logged', async (req, res) => {
   );
   */
   
-  //To-Do: fix logout capability
-  router.get('/logout', async(req,res) => {
+  //To-Do: add super-logout capability to revoke Spotify API token
+  router.get('/super-logout', async(req,res) => {
 	  
 	const token = 'your access token here'; // retrieve token from cookie
   
