@@ -2,7 +2,6 @@
 
 const express = require('express');
 const router = express.Router();
-//const fetch = require('node-fetch');
 const querystring = require('querystring');
 const cors = require('cors');
 const axios = require('axios');
@@ -116,6 +115,55 @@ router.get('/logged', async (req, res) => {
     res.status(500).json({ message: "Error fetching data" });
   });
   */
+  /*
+  router.get('/login', async (req, res) => {
+  const scope =
+    `user-modify-playback-state
+    user-read-playback-state
+    user-read-currently-playing
+    user-library-modify
+    user-library-read
+    user-top-read
+    playlist-read-private
+    playlist-modify-public`;
+  res.header("Access-Control-Allow-Origin", "*");
+  res.redirect('https://accounts.spotify.com/authorize?' +
+    querystring.stringify({
+      response_type: 'code',
+      client_id: process.env.CLIENT_ID,
+      scope: scope,
+      redirect_uri: process.env.REDIRECTURI
+    })
+  );
+  */
+  
+  //To-Do: fix logout capability
+  router.get('/logout', async(req,res) => {
+	  
+	const token = 'your access token here'; // retrieve token from cookie
+  
+    const url = 'https://accounts.spotify.com/api/token';
+    const data = new URLSearchParams();
+    data.append('token', token);
+    data.append('token_type_hint', 'access_token');
+	
+    const config = {
+      headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `Basic ${Buffer.from('client_id:client_secret').toString('base64')}` // replace with your app's client ID and secret
+      }
+    };
+
+	axios.post(url, data, config)
+	  .then(response => {
+		console.log(response.data);
+		console.log('Access token revoked');
+	  })
+	  .catch(error => {
+		console.error(error);
+	  });
+  });	  
+
 });
 
 module.exports = router;
