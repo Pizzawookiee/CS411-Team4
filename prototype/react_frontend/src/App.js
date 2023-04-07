@@ -64,8 +64,8 @@ function LogIn() {
     
   };
   
-  //const token = Cookies.get('token');
-  //alert(token);
+  const token = Cookies.get('token');
+  alert(token);
   
   const handleLogOut = async() => {
     Cookies.remove('isLoggedIn');
