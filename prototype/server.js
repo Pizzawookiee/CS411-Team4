@@ -7,6 +7,7 @@ const { exec } = require('child_process');
 const AuthRoutes = require('./routes/authRoutes.js');
 const cors = require("cors");
 const morgan = require('morgan');
+const Cookies = require('js-cookie');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -56,3 +57,4 @@ app.get('/logs', (req, res) => {
   res.json(logData);
 });
 */
+//app.get('/token', (req,res) => {res.status(200).send(Cookies.get('token'))});

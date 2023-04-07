@@ -5,6 +5,7 @@ const router = express.Router();
 const querystring = require('querystring');
 const cors = require('cors');
 const axios = require('axios');
+const Cookies = require('js-cookie');
 
 // this can be used as a seperate module
 const encodeFormData = (data) => {
@@ -77,7 +78,9 @@ router.get('/logged', async (req, res) => {
 	  const query = querystring.stringify(data);
 	  const param_address = `${process.env.CLIENT_REDIRECTURI}?${query}`;
 	  const params = getHashParams(param_address);
-	  console.log(params); //replace with SAVING TO A COOKIE WHICH IS RETRIEVED BY BACKEND, then FRONTEND retrieves BACKEND with get
+	  //console.log(params); //replace with SAVING TO A COOKIE WHICH IS RETRIEVED BY BACKEND, then FRONTEND retrieves BACKEND with get
+	  res.cookie('token', params);
+	  //console.log(req.cookie.token)
 	  res.header("Access-Control-Allow-Origin", "*");
 	  //res.status(200).json(params);
 	  res.redirect('http://localhost:3000/');

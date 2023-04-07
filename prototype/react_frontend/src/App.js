@@ -60,9 +60,12 @@ function LogIn() {
       console.error(error);
     }
 	*/
-	Cookies.set('isLoggedIn', true); 
+	Cookies.set('isLoggedIn', true);
     
   };
+  
+  const token = Cookies.get('token');
+  alert(token);
   
   const handleLogOut = async() => {
     Cookies.remove('isLoggedIn');
