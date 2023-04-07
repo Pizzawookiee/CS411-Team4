@@ -15,9 +15,13 @@ Prereqs: Node and npm
 4) add a file called ".env" into your prototype folder. Its contents should be...
 
 PORT=5000
+
 CLIENT_ID="your client_id from spotify here"
+
 CLIENT_SECRET="your client_secret from spotify here"
+
 REDIRECTURI="http://localhost:5000/api/logged"
+
 CLIENT_REDIRECTURI="http://localhost:3000/"
 
 For Client_ID and Client_Secret, make an app with your Spotify for Developers account and use the keys it gives you.
