@@ -64,8 +64,8 @@ function LogIn() {
     
   };
   
-  const token = Cookies.get('token');
-  alert(token);
+  //const token = Cookies.get('token');
+  //alert(token);
   
   const handleLogOut = async() => {
     Cookies.remove('isLoggedIn');
@@ -144,7 +144,7 @@ function MyForm({ isLoggedIn }) {
     } else {
       setIsSubmitting(true);
       try {
-        const response = await axios.post('http://localhost:5000/express_backend', inputs, {
+        const response = await axios.post('http://localhost:5000/test_google_trends', inputs, {
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json'
