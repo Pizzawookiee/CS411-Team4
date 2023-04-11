@@ -1,4 +1,4 @@
-//source: https://ahmetomer.net/spotify-api-authorization-in-nodejs/
+//code adapted from https://ahmetomer.net/spotify-api-authorization-in-nodejs/
 
 const express = require('express');
 const router = express.Router();

@@ -1,3 +1,5 @@
+//code adapted from https://www.section.io/engineering-education/how-to-setup-nodejs-express-for-react/
+
 const express = require('express'); 
 const app = express();
 require('dotenv').config();
