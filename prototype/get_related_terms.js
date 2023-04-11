@@ -1,3 +1,5 @@
+//code adapted from https://medium.com/@mikhail.a.zub/web-scraping-google-trends-with-nodejs-1fd064ef0df0
+
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const fs = require("fs");
