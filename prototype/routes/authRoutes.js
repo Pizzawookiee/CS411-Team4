@@ -1,7 +1,6 @@
-//code adapted from https://ahmetomer.net/spotify-api-authorization-in-nodejs/
-
 const express = require('express');
 const router = express.Router();
+const config = require('../config/spotify.js');
 const querystring = require('querystring');
 const cors = require('cors');
 const axios = require('axios');
@@ -50,9 +49,9 @@ router.get('/login', async (req, res) => {
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
-      client_id: process.env.CLIENT_ID,
+      client_id: config.spotify.CLIENT_ID,
       scope: scope,
-      redirect_uri: process.env.REDIRECTURI
+      redirect_uri: config.spotify.REDIRECTURI
     })
   );
 });
@@ -61,9 +60,9 @@ router.get('/logged', async (req, res) => {
   const body = {
     grant_type: 'authorization_code',
     code: req.query.code,
-    redirect_uri: process.env.REDIRECTURI,
-    client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET,
+    redirect_uri: config.spotify.REDIRECTURI,
+    client_id: config.spotify.CLIENT_ID,
+    client_secret: config.spotify.CLIENT_SECRET,
   }
 
 	try {
@@ -76,7 +75,7 @@ router.get('/logged', async (req, res) => {
 
 	  const data = response.data;
 	  const query = querystring.stringify(data);
-	  const param_address = `${process.env.CLIENT_REDIRECTURI}?${query}`;
+	  const param_address = `${config.spotify.CLIENT_REDIRECTURI}?${query}`;
 	  const params = getHashParams(param_address);
 	  console.log(params); //replace with SAVING TO A COOKIE WHICH IS RETRIEVED BY BACKEND, then FRONTEND retrieves BACKEND with get
 	  res.cookie('token', params);
@@ -134,9 +133,9 @@ router.get('/logged', async (req, res) => {
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
-      client_id: process.env.CLIENT_ID,
+      client_id: config.spotify.CLIENT_ID,
       scope: scope,
-      redirect_uri: process.env.REDIRECTURI
+      redirect_uri: config.spotify.REDIRECTURI
     })
   );
   */
