@@ -1,4 +1,4 @@
 prototype/node_modules
 prototype/react_frontend/node_modules
 prototype/.env
-prototype/config/spotify
+prototype/config/spotify.js
