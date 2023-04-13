@@ -144,7 +144,7 @@ function MyForm({ isLoggedIn }) {
     } else {
       setIsSubmitting(true);
       try {
-        const response = await axios.post('http://localhost:5000/test_google_trends', inputs, {
+        const response = await axios.post('http://localhost:5000/test_spotify_api', inputs, {
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json'

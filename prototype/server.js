@@ -63,12 +63,18 @@ app.post('/test_spotify_api', (req, res) => {
 });
 */
 
+app.post('/token', (req, res) => {
+	const params = req.body;
+	console.log(params); //seems like this works!
+	res.sendStatus(200);
+});
+
 app.post('/test_spotify_api', async (req, res) => {
   const { playlist, keyword } = req.body;
   console.log(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
 
   try {
-    const response = await axios.post('http://localhost:5000/api/logged/', { responseType: 'json' }); //change method to POST
+    const response = await axios.get('http://localhost:5000/token/', { responseType: 'json' }); //change method to POST
     const token = response.data.token; //correct property name to access token
 
     console.log(`Token: ${token}`);
