@@ -144,12 +144,41 @@ function MyForm({ isLoggedIn }) {
     } else {
       setIsSubmitting(true);
       try {
+		const token = Cookies.get('token'); //this is a very unsecure way to retrieve cookie but it works for now
+		const cookieObject = JSON.parse(token.replace('j:', ''));
+		const accessToken = cookieObject.access_token;
+		//console.log(accessToken);
+		/*
         const response = await axios.post('http://localhost:5000/test_spotify_api', inputs, {
           headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json'
           }
         });
+		*/
+		
+		//the below axios.post command retrieves token from front end
+		//The deployed app should not do this (token should only exist in back end), but this is just what works
+		
+		
+		
+		const response = await axios.post(
+		  'http://localhost:5000/test_spotify_api',
+		  { 
+			playlist: inputs.playlist, 
+			keyword: inputs.keyword 
+		  },
+		  {
+			headers: {
+			  'Authorization': `Bearer ${accessToken}`,
+			  'Access-Control-Allow-Origin': '*',
+			  'Content-Type': 'application/json'
+			}
+		  }
+		);
+
+		
+		
         console.log(response.data);
       } catch (error) {
         console.error(error);

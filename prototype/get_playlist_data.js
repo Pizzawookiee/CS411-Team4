@@ -1,8 +1,15 @@
-const [firstArg, ...remainingArgs] = process.argv.slice(2);
+const remainingArgs = process.argv.slice(2); //splits inputs by spaces, which creates an issue solved in next line...
+let firstArg = remainingArgs.splice(0, 2).join(' '); //the access token is in form "Bearer ...", so it is split into "Bearer" and "...", so we just pick the two
+firstArg = firstArg.endsWith('\r\n') ? firstArg.slice(0, -2) : firstArg; //very hacky way to remove some extra characters from token string
+//console.log(firstArg);
+
+
 const playlist_URLs = remainingArgs; // array of playlist URLs
+//console.log(playlist_URLs);
 const token = firstArg;
 const axios = require('axios');
 const cookieParser = require('cookie-parser');
+const { exec } = require('child_process');
 
 async function getPlaylistInfo(URL) {
   const parts = URL.split('/');
@@ -11,33 +18,25 @@ async function getPlaylistInfo(URL) {
 
   let url = 'https://api.spotify.com/v1/playlists/';
   url = url + playlistID;
-  console.log(url);
+  console.log(`this is the ${url}`);
   
+  let base = 'Authorization: '
+  let full_token = base + token;
   
-  const token_base = 'Bearer ';
-  //let token = req.cookies.token;
-  
-  if (token !== null) {
-    const tokenObject = JSON.parse(token.substring(2)); // Remove the "j:" prefix and parse the JSON string
-    const accessToken = tokenObject.access_token; // Extract the access_token property from the token object
-    console.log(accessToken);
-  }
-  //console.log(token)
-  //const tokenObject = JSON.parse(token.substring(2)); // Remove the "j:" prefix and parse the JSON string
-  //const accessToken = tokenObject.access_token; // Extract the access_token property from the token object
-
-  //console.log(accessToken);
-  token = token_base + accessToken;
-
+  const result = exec(`curl --request GET ${url} --header "${full_token}"`);
+  console.log(result);
+  return result;
+ 
+  /*
   let config = {
     method: 'get',
     maxBodyLength: Infinity,
     url: url,
     headers: {
       'Authorization': token,
-      'Cookie': 'e'
+      'Cookie': 'sp_t=9e55e952365cde5824e5b5a3288bde4d'
     }
-  };
+  }; //this doesn't work
 
    async function makeRequest() {
     try {
@@ -48,8 +47,9 @@ async function getPlaylistInfo(URL) {
       console.log(error);
     }
   }
-
+  
   return await makeRequest();
+  */
 }
 
 

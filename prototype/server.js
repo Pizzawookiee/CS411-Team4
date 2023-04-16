@@ -62,19 +62,85 @@ app.post('/test_spotify_api', (req, res) => {
   });
 });
 */
-
+/*
 app.post('/token', (req, res) => {
 	const params = req.body;
+	const param_string = encodeURIComponent(JSON.stringify(params));
+	console.log(param_string);
+	console.log(decodeURIComponent(param_string));
+	//const token = params.data;
+	//res.set('Set-Cookie', `token_info=${encodeURIComponent(params.data.token)}`);
+	res.cookie('token', param_string);
+	//console.log(req.cookies.token);
 	console.log(params); //seems like this works!
+	console.log(res.getHeaders());
+	res.sendStatus(200);
+});
+*/
+/*
+app.post('/token', (req, res) => {
+	const params = req.body;
+	const param_string = encodeURIComponent(JSON.stringify(params));
+	//console.log(param_string);
+	//console.log(decodeURIComponent(param_string));
+	res.cookie('token', param_string);
+	//console.log(params); 
+	console.log(res.getHeaders()['set-cookie']);
 	res.sendStatus(200);
 });
 
+
+
+
+app.get('/token', (req, res) => {
+  //console.log(req.headers);
+  //console.log(req.cookies);
+  //const token = JSON.parse(req.cookies.token);
+  //const token = req.cookies.token; //testing
+  //const token = req.get('set-cookie');
+  const token = res.getHeaders()['set-cookie'];
+  
+  console.log(token);
+  
+  if (token !== null && token !== undefined) {
+	
+    res.send(token);
+  } else {
+    res.send('No data found in cookie');
+  }
+});
+*/
+
+app.post('/token', (req, res) => {
+  const params = req.body;
+  const param_string = encodeURIComponent(JSON.stringify(params));
+  console.log(params);
+  res.cookie('token', param_string, {
+    httpOnly: true,
+    sameSite: 'strict',
+	path: '/token',
+  });
+  res.sendStatus(200);
+});
+
+app.get('/token', (req, res) => {
+  const token = req.cookies['token'];
+  if (token) {
+    res.send(token);
+  } else {
+    res.send('No data found in cookie');
+  }
+});
+
+/*
 app.post('/test_spotify_api', async (req, res) => {
   const { playlist, keyword } = req.body;
   console.log(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
-
+  const response = await axios.get('http://localhost:5000/token/');
+  console.log(response); //testing
+  
   try {
-    const response = await axios.get('http://localhost:5000/token/', { responseType: 'json' }); //change method to POST
+    const response = await axios.get('http://localhost:5000/token/', { responseType: 'json' }); 
     const token = response.data.token; //correct property name to access token
 
     console.log(`Token: ${token}`);
@@ -94,6 +160,36 @@ app.post('/test_spotify_api', async (req, res) => {
     console.log(error);
     res.status(500).json({ message: "Error fetching data" });
   }
+  
+});
+*/
+
+//BELOW is a temporary version of the POST request to test_spotify_api which also takes in the token from frontend
+//The token should actually be taken from backend since frontend is not secure, but I have no idea how to do this
+
+app.post('/test_spotify_api', async (req, res) => {
+  const { playlist, keyword } = req.body;
+  console.log(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
+  const token = req.headers.authorization;
+  console.log(token);
+  
+  try {
+    console.log('pulling spotify playlist data...');
+    exec(`node get_playlist_data.js ${token} ${playlist}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      console.error(`stderr: ${stderr}`);
+      res.header("Access-Control-Allow-Origin", "*");
+      res.status(200).send(stdout) 
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error fetching data" });
+  }
+  
 });
 
 
