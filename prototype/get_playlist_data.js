@@ -1,6 +1,9 @@
 const remainingArgs = process.argv.slice(2); //splits inputs by spaces, which creates an issue solved in next line...
 let firstArg = remainingArgs.splice(0, 1).join(' '); //the access token is in form "Bearer ...", so it is split into "Bearer" and "...", so we just pick the two
 //firstArg = firstArg.endsWith('\r\n') ? firstArg.slice(0, -2) : firstArg; //very hacky way to remove some extra characters from token string
+
+//DEPRECATED, see server.js for new version
+
 //console.log(firstArg);
 const SpotifyWebApi = require('spotify-web-api-node');
 const spotifyApi = new SpotifyWebApi();

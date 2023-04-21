@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 const bodyParser = require('body-parser');
 const config = require('./config/spotify.js');
 const { exec } = require('child_process');
-const AuthRoutes = require('./routes/authRoutes.js');
+//const AuthRoutes = require('./routes/authRoutes.js');
 const cors = require("cors");
 const morgan = require('morgan');
 const axios = require('axios');
@@ -48,7 +48,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
-app.use('/api', cors(), AuthRoutes);
+//app.use('/api', cors(), AuthRoutes);
 app.use(morgan('combined'));
 app.use(cookieParser());
 

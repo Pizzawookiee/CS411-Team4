@@ -1,3 +1,6 @@
+//DEPRECATED, see server.js for new OAuth
+
+
 const express = require('express');
 const router = express.Router();
 const config = require('../config/spotify.js');
