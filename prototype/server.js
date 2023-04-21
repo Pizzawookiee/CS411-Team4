@@ -283,7 +283,7 @@ app.post('/test_spotify_api', async (req, res) => {
 
 //BELOW is a temporary version of the POST request to test_spotify_api which also takes in the token from frontend
 //The token should actually be taken from backend since frontend is not secure, but I have no idea how to do this
-//DEPRECATED CODE, but remember to remove token from front end
+//DEPRECATED CODE, and token now removed from front end.
 /*
 app.post('/test_spotify_api', async (req, res) => {
   const { playlist, keyword } = req.body;
