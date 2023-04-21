@@ -50,9 +50,9 @@ function LogIn() {
 
   const handleLogIn = async () => {
 	//this block doesn't work for some reason  
-	/*  
+	/*
     try {	
-      const response = await axios.get('http://localhost:5000/api/login');
+      const response = await axios.get('http://localhost:5000/login');
       console.log(response.data);  
       Cookies.set('isLoggedIn', true);
       setIsLoggedIn(true);
@@ -60,6 +60,7 @@ function LogIn() {
       console.error(error);
     }
 	*/
+	
 	Cookies.set('isLoggedIn', true);
     
   };
@@ -80,10 +81,15 @@ function LogIn() {
 			<LogInButton onClick={handleLogOut}>Log Out</LogInButton>
 		</>
       ) : (
-	    <a href="http://localhost:5000/api/login">
+	  /*
+	  <LogInButton onClick={handleLogIn}>Log In</LogInButton>
+	  */
+	  
+	    <a href="http://localhost:5000/login">
           <LogInButton onClick={handleLogIn}>Log In</LogInButton>
 		</a>
-      )}
+      
+	  )}
     </div>
   );
 }
@@ -144,9 +150,9 @@ function MyForm({ isLoggedIn }) {
     } else {
       setIsSubmitting(true);
       try {
-		const token = Cookies.get('token'); //this is a very unsecure way to retrieve cookie but it works for now
-		const cookieObject = JSON.parse(token.replace('j:', ''));
-		const accessToken = cookieObject.access_token;
+		//const token = Cookies.get('token'); //this is a very unsecure way to retrieve cookie but it works for now
+		//const cookieObject = JSON.parse(token.replace('j:', ''));
+		//const accessToken = cookieObject.access_token;
 		//console.log(accessToken);
 		/*
         const response = await axios.post('http://localhost:5000/test_spotify_api', inputs, {
@@ -167,13 +173,6 @@ function MyForm({ isLoggedIn }) {
 		  { 
 			playlist: inputs.playlist, 
 			keyword: inputs.keyword 
-		  },
-		  {
-			headers: {
-			  'Authorization': `Bearer ${accessToken}`,
-			  'Access-Control-Allow-Origin': '*',
-			  'Content-Type': 'application/json'
-			}
 		  }
 		);
 
