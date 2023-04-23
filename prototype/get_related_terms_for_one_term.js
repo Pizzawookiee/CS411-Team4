@@ -6,22 +6,32 @@ const fs = require("fs");
 
 puppeteer.use(StealthPlugin());
 
-//const searchQueries = process.argv.slice(2); // search queries taken from command line arguments
+//const searchQueries = process.argv.slice(2); //doesn't work for multi-word inputs, because it treats space-separated words as separate inputs
 
-const searchQueries = process.argv[2].replace(/[{}]/g, '').split(',').map(str => str.trim());
-//hacky way of sending an array of phrases (which might contain spaces) as arguments
-//basically, input format for an argument is in the form {element1,element2,element3,...,}
+let mergedArgs = '';
+for (let i = 2; i < process.argv.length; i++) {
+  mergedArgs += process.argv[i];
+  if (i < process.argv.length-1) {
+	  mergedArgs += '+'; //merge with plus sign, otherwise the call doesn't work
+  }
+}
+//console.log(mergedArgs);
 
-console.log(searchQueries);
+const searchQueries = [ mergedArgs ];
+
 
 const URLs = searchQueries.map((query) => `https://trends.google.com/trends/explore?date=now 1-d&geo=US&q=${encodeURI(query)}&hl=en`);
 
+//console.log(URLs);
 
-
-async function getRelatedQueries(URL, searchQuery, browser) {
-  
+async function getRelatedQueries(URL, searchQuery) {
+  //console.log(URL);
+  const browser = await puppeteer.launch({
+    headless: true, //prevents browser windows from popping up
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   const page = await browser.newPage();
-  await page.setDefaultNavigationTimeout(120000);
+  await page.setDefaultNavigationTimeout(60000);
   const relatedQueries = [];
 
   await page.goto(URL);
@@ -57,20 +67,51 @@ async function getRelatedQueries(URL, searchQuery, browser) {
   });
   await page.waitForTimeout(5000); // wait for 5 seconds to get all responses
 
-  return relatedQueries;
+  await browser.close(); // close the browser
+
+  const json = JSON.parse(JSON.stringify(relatedQueries));
+  
+  //console.log (relatedQueries);
+  
+  // Extract the values under the "query" field
+  const searchQueryValues = [];
+  
+
+
+  function extractValues(obj) {
+    for (const key in obj) {	  	
+	  if (typeof obj[key] === 'object') {
+		 //console.log('top')
+	     extractValues(obj[key]);
+	  } else if (key === 'query') {
+		 searchQueryValues.push(obj[key]);
+	  }
+      //if (typeof obj[key] === 'object') {
+      //  extractValues(obj[key]);
+      //} else if (key === 'searchQuery') {
+      //  searchQueryValues.push(obj[key]);
+      //}
+    }
+  }
+
+  extractValues(json);
+
+  // Return a string of all searchQuery values
+  const searchQueryString = searchQueryValues.join(',');
+  console.log(searchQueryString);
+  
+  return(searchQueryString);
 }
 
+getRelatedQueries(URLs[0],searchQueries[0]);
+/*
 async function getGoogleTrendsResults() {
-  const browser = await puppeteer.launch({
-    headless: true, //prevents browser windows from popping up
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  }); 	
   const promises = [];
 
   for (let i = 0; i < URLs.length; i++) {
     const URL = URLs[i];
     const searchQuery = searchQueries[i];
-    promises.push(getRelatedQueries(URL, searchQuery, browser)); //pushes all requests into promises
+    promises.push(getRelatedQueries(URL, searchQuery)); //pushes all requests into promises
   }
 
   const relatedQueries = await Promise.all(promises); //runs all promises at same time
@@ -102,9 +143,9 @@ async function getGoogleTrendsResults() {
   extractValues(json);
 
   // Return a string of all searchQuery values
-  const searchQueryString = searchQueryValues.join(',');
+  const searchQueryString = searchQueryValues.join(', ');
   console.log(searchQueryString);
-  await browser.close(); // close the browser
+  
   return(searchQueryString);
 
   //const fileName = `${searchQueries.join("_")}.json`;
@@ -115,3 +156,4 @@ async function getGoogleTrendsResults() {
 }
 
 getGoogleTrendsResults();
+*/

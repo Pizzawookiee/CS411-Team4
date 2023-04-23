@@ -130,6 +130,30 @@ async function getPlaylistTracks(playlistId, playlistName) {
   return tracks;
 }
 
+async function generateRelatedTermsfromPlaylist(playlistId, playlistName) {
+
+  const data = await spotifyApi.getPlaylistTracks(playlistId, {
+    offset: 1,
+    limit: 100,
+    fields: 'items'
+  })
+
+  // console.log('The playlist contains these tracks', data.body);
+  // console.log('The playlist contains these tracks: ', data.body.items[0].track);
+  // console.log("'" + playlistName + "'" + ' contains these tracks:');
+  let tracks = [];
+
+  for (let track_obj of data.body.items) {
+    const track = track_obj.track
+	//add exec call to file for generating ranking for one song title
+    tracks.push(track.name);
+    //console.log(track.name + " : " + track.artists[0].name)
+  }
+  console.log(tracks);
+  console.log("---------------+++++++++++++++++++++++++")
+  return tracks;
+}
+
 //POST route instructions
 app.post('/test_google_trends', (req, res) => {
   const { playlist, keyword } = req.body;
@@ -317,6 +341,15 @@ app.post('/test_spotify_api', async (req, res) => {
   const parts = playlist.split('/');
   const playlistID = parts[parts.length - 1];
   getPlaylistTracks(playlistID, 'playlist');
+  res.status(200).send('worked');
+});
+
+app.post('/related_terms', async (req, res) => {
+  const { playlist, keyword } = req.body;
+  console.log(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
+  const parts = playlist.split('/');
+  const playlistID = parts[parts.length - 1];
+  generateRelatedTermsfromPlaylist(playlistID, 'playlist');
   res.status(200).send('worked');
 });
 
