@@ -6,11 +6,26 @@ const fs = require("fs");
 
 puppeteer.use(StealthPlugin());
 
-const searchQueries = process.argv.slice(2); // search queries taken from command line arguments
+//const searchQueries = process.argv.slice(2); //doesn't work for multi-word inputs, because it treats space-separated words as separate inputs
+
+let mergedArgs = '';
+for (let i = 2; i < process.argv.length; i++) {
+  mergedArgs += process.argv[i];
+  if (i < process.argv.length-1) {
+	  mergedArgs += '+'; //merge with plus sign, otherwise the call doesn't work
+  }
+}
+//console.log(mergedArgs);
+
+const searchQueries = [ mergedArgs ];
+
 
 const URLs = searchQueries.map((query) => `https://trends.google.com/trends/explore?date=now 1-d&geo=US&q=${encodeURI(query)}&hl=en`);
 
+//console.log(URLs);
+
 async function getRelatedQueries(URL, searchQuery) {
+  //console.log(URL);
   const browser = await puppeteer.launch({
     headless: true, //prevents browser windows from popping up
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -54,9 +69,42 @@ async function getRelatedQueries(URL, searchQuery) {
 
   await browser.close(); // close the browser
 
-  return relatedQueries;
+  const json = JSON.parse(JSON.stringify(relatedQueries));
+  
+  //console.log (relatedQueries);
+  
+  // Extract the values under the "query" field
+  const searchQueryValues = [];
+  
+
+
+  function extractValues(obj) {
+    for (const key in obj) {	  	
+	  if (typeof obj[key] === 'object') {
+		 //console.log('top')
+	     extractValues(obj[key]);
+	  } else if (key === 'query') {
+		 searchQueryValues.push(obj[key]);
+	  }
+      //if (typeof obj[key] === 'object') {
+      //  extractValues(obj[key]);
+      //} else if (key === 'searchQuery') {
+      //  searchQueryValues.push(obj[key]);
+      //}
+    }
+  }
+
+  extractValues(json);
+
+  // Return a string of all searchQuery values
+  const searchQueryString = searchQueryValues.join(', ');
+  console.log(searchQueryString);
+  
+  return(searchQueryString);
 }
 
+getRelatedQueries(URLs[0],searchQueries[0]);
+/*
 async function getGoogleTrendsResults() {
   const promises = [];
 
@@ -108,3 +156,4 @@ async function getGoogleTrendsResults() {
 }
 
 getGoogleTrendsResults();
+*/
