@@ -94,44 +94,6 @@ function LogIn() {
   );
 }
 
-/*
-function LogIn() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLogIn = async () => {
-	  
-    try {	
-      const response = await axios.get('http://localhost:5000/api/login');
-      console.log(response.data);  
-      setIsLoggedIn(true);
-    } catch (error) {
-      console.error(error);
-    }
-	setIsLoggedIn(true);
-	
-  };
-  
-  const handleLogOut = async() => {
-	setIsLoggedIn(false);
-  };
-
-  return (
-    <div>
-      {isLoggedIn ? (
-	    <>
-			<MyForm isLoggedIn={isLoggedIn} />
-			<LogInButton onClick={handleLogOut}>Log Out</LogInButton>
-		</>
-      ) : (
-	    <a href="http://localhost:5000/api/login">
-          <LogInButton onClick={handleLogIn}>Log In</LogInButton>
-		</a>
-      )}
-    </div>
-  );
-}
-*/
-
 
 
 function MyForm({ isLoggedIn }) {
@@ -150,29 +112,12 @@ function MyForm({ isLoggedIn }) {
     } else {
       setIsSubmitting(true);
       try {
-		//const token = Cookies.get('token'); //this is a very unsecure way to retrieve cookie but it works for now
-		//const cookieObject = JSON.parse(token.replace('j:', ''));
-		//const accessToken = cookieObject.access_token;
-		//console.log(accessToken);
-		/*
-        const response = await axios.post('http://localhost:5000/test_spotify_api', inputs, {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': 'application/json'
-          }
-        });
-		*/
-		
-		//the below axios.post command retrieves token from front end
-		//The deployed app should not do this (token should only exist in back end), but this is just what works
-		
-		
-		
+			
 		const response = await axios.post(
 		  'http://localhost:5000/related_terms',
 		  { 
 			playlist: inputs.playlist, 
-			keyword: inputs.keyword 
+			keyword: ''
 		  }
 		);
 
@@ -210,10 +155,6 @@ function MyForm({ isLoggedIn }) {
             Enter a URL to a Spotify playlist (required) ->
             <input type="text" name="playlist" value={inputs.playlist} onChange={handleInputChange} />
           </label>
-          <label>
-            Enter a keyword to rank songs by (not required) ->
-            <input type="text" name="keyword" value={inputs.keyword} onChange={handleInputChange} />
-          </label>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
             <Button onClick={handleReset}>Reset</Button>
             <Button onClick={handleSubmit} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.5 : 1 }}>
@@ -229,38 +170,15 @@ function MyForm({ isLoggedIn }) {
   );
 }
 
+//DEPRECATED code for keyword field 
 /*
-class App extends Component {
-state = {
-    data: null
-  };
+<label>
+            Enter a keyword (not required) ->
+            <input type="text" name="keyword" value={inputs.keyword} onChange={handleInputChange} />
+          </label>
+*/        
 
-  componentDidMount() {
-    this.callBackendAPI()
-      .then(res => this.setState({ data: res.express }))
-      .catch(err => console.log(err));
-  }
-    // GET route to OAuth
-  callBackendAPI = async () => {
-    const response = await fetch('http://localhost:5000/api/login');
-    const body = await response.json();
 
-    if (response.status !== 200) {
-      throw Error(body.message) 
-    }
-    //return body;
-	//alert("Express backend connected");
-  };
-
-  render() {
-	  return (
-	    <>
-			<LogIn />
-		</>
-	);
-  }
-}
-*/
 
 function App() {
   return (
