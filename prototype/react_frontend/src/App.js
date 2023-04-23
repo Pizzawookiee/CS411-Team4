@@ -169,7 +169,7 @@ function MyForm({ isLoggedIn }) {
 		
 		
 		const response = await axios.post(
-		  'http://localhost:5000/test_spotify_api',
+		  'http://localhost:5000/related_terms',
 		  { 
 			playlist: inputs.playlist, 
 			keyword: inputs.keyword 

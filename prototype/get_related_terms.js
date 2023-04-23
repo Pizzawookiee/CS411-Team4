@@ -6,17 +6,22 @@ const fs = require("fs");
 
 puppeteer.use(StealthPlugin());
 
-const searchQueries = process.argv.slice(2); // search queries taken from command line arguments
+//const searchQueries = process.argv.slice(2); // search queries taken from command line arguments
+
+const searchQueries = process.argv[2].replace(/[{}]/g, '').split(',').map(str => str.trim());
+//hacky way of sending an array of phrases (which might contain spaces) as arguments
+//basically, input format for an argument is in the form {element1,element2,element3,...,}
+
+console.log(searchQueries);
 
 const URLs = searchQueries.map((query) => `https://trends.google.com/trends/explore?date=now 1-d&geo=US&q=${encodeURI(query)}&hl=en`);
 
-async function getRelatedQueries(URL, searchQuery) {
-  const browser = await puppeteer.launch({
-    headless: true, //prevents browser windows from popping up
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+
+
+async function getRelatedQueries(URL, searchQuery, browser) {
+  
   const page = await browser.newPage();
-  await page.setDefaultNavigationTimeout(60000);
+  await page.setDefaultNavigationTimeout(120000);
   const relatedQueries = [];
 
   await page.goto(URL);
@@ -52,18 +57,20 @@ async function getRelatedQueries(URL, searchQuery) {
   });
   await page.waitForTimeout(5000); // wait for 5 seconds to get all responses
 
-  await browser.close(); // close the browser
-
   return relatedQueries;
 }
 
 async function getGoogleTrendsResults() {
+  const browser = await puppeteer.launch({
+    headless: true, //prevents browser windows from popping up
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  }); 	
   const promises = [];
 
   for (let i = 0; i < URLs.length; i++) {
     const URL = URLs[i];
     const searchQuery = searchQueries[i];
-    promises.push(getRelatedQueries(URL, searchQuery)); //pushes all requests into promises
+    promises.push(getRelatedQueries(URL, searchQuery, browser)); //pushes all requests into promises
   }
 
   const relatedQueries = await Promise.all(promises); //runs all promises at same time
@@ -95,9 +102,9 @@ async function getGoogleTrendsResults() {
   extractValues(json);
 
   // Return a string of all searchQuery values
-  const searchQueryString = searchQueryValues.join(', ');
+  const searchQueryString = searchQueryValues.join(',');
   console.log(searchQueryString);
-  
+  await browser.close(); // close the browser
   return(searchQueryString);
 
   //const fileName = `${searchQueries.join("_")}.json`;

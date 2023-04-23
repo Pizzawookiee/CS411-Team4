@@ -130,7 +130,7 @@ async function getPlaylistTracks(playlistId, playlistName) {
   return tracks;
 }
 
-async function generateRankings(playlistId, playlistName) {
+async function generateRelatedTermsfromPlaylist(playlistId, playlistName) {
 
   const data = await spotifyApi.getPlaylistTracks(playlistId, {
     offset: 1,
@@ -146,10 +146,10 @@ async function generateRankings(playlistId, playlistName) {
   for (let track_obj of data.body.items) {
     const track = track_obj.track
 	//add exec call to file for generating ranking for one song title
-    tracks.push(track);
-    console.log(track.name + " : " + track.artists[0].name)
+    tracks.push(track.name);
+    //console.log(track.name + " : " + track.artists[0].name)
   }
-  
+  console.log(tracks);
   console.log("---------------+++++++++++++++++++++++++")
   return tracks;
 }
@@ -341,6 +341,15 @@ app.post('/test_spotify_api', async (req, res) => {
   const parts = playlist.split('/');
   const playlistID = parts[parts.length - 1];
   getPlaylistTracks(playlistID, 'playlist');
+  res.status(200).send('worked');
+});
+
+app.post('/related_terms', async (req, res) => {
+  const { playlist, keyword } = req.body;
+  console.log(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
+  const parts = playlist.split('/');
+  const playlistID = parts[parts.length - 1];
+  generateRelatedTermsfromPlaylist(playlistID, 'playlist');
   res.status(200).send('worked');
 });
 

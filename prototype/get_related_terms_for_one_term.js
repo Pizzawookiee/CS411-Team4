@@ -97,7 +97,7 @@ async function getRelatedQueries(URL, searchQuery) {
   extractValues(json);
 
   // Return a string of all searchQuery values
-  const searchQueryString = searchQueryValues.join(', ');
+  const searchQueryString = searchQueryValues.join(',');
   console.log(searchQueryString);
   
   return(searchQueryString);
