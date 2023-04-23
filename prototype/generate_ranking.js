@@ -1,3 +1,5 @@
+//DEPRECATED due to abandonment of song ranking functionality
+
 //this script generates a degree of separation between the song title and keyword
 //it takes in two arguments: keyword and song title. As long as keyword argument is first,
 //no need to worry about song title having spaces
