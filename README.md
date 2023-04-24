@@ -10,8 +10,11 @@ HOW TO RUN APP:
 Prereqs: Node, npm and MongoDB
 
 MongoDB setup (warning, you need a few GB of storage on your machine):
+
 a) Install MongoDB. Assuming you're on Windows, try (https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows/)
+
 b) Install Mongosh (Mongo shell) and add it to PATH environment variable with these instructions (https://www.mongodb.com/docs/mongodb-shell/install/)
+
 c) open any command prompt window. Type "mongosh", hit Enter. Keep the window open the entire time you use the app.
 
 You should see something that looks like this:
