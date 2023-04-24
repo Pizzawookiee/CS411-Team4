@@ -1,4 +1,4 @@
-Node
+Node based stack (like MERN)
 Advantages)
 → most tutorials on pulling data from Spotify API were written in Node
 → Node has puppeteer module which was great for webscraping; python has limited options for webscraping Google Trends
@@ -10,7 +10,7 @@ Drawbacks)
 → Nobody on the team had prior experience
 → runs asynchronously rather than linearly, so more complexity
 
-Django
+Django stack
 Advantages)
 → familiar with Python
 → runs linearly, easier to understand
