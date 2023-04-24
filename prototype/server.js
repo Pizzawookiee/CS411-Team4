@@ -142,16 +142,28 @@ async function generateRelatedTermsfromPlaylist(playlistId, playlistName) {
   // console.log('The playlist contains these tracks: ', data.body.items[0].track);
   // console.log("'" + playlistName + "'" + ' contains these tracks:');
   let tracks = [];
-
+  //let tracks = '';
   for (let track_obj of data.body.items) {
-    const track = track_obj.track
-	//add exec call to file for generating ranking for one song title
+    const track = track_obj.track;
+	//tracks + track.name;
     tracks.push(track.name);
     //console.log(track.name + " : " + track.artists[0].name)
   }
-  console.log(tracks);
+  let trackStr = tracks.toString();
+  trackStr = "{" + trackStr.toLowerCase().replace(/[^a-z, ]/g, '').replace(/\s+/g, "+") + "}";
+  console.log(trackStr);
+  console.log(typeof(trackStr));
+  
+  exec(`node get_related_terms.js ${trackStr}`, (error, stdout, stderr) => {
+	  if (error) {
+		console.error(`exec error: ${error}`);
+		return;
+	  }
+	  console.log(stdout); //yay this works
+	  return stdout;
+	});
   console.log("---------------+++++++++++++++++++++++++")
-  return tracks;
+  //return tracks;
 }
 
 //POST route instructions

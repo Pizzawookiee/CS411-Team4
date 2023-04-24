@@ -58,7 +58,7 @@ exec(`node get_related_terms_for_one_term.js ${keyword} ${filtered_input}`, (err
 function check_one_degree(input_string) {
 	//inputs_array = input_string.split(',');
 	let inputs = "{" + input_string + "}";
-	inputs = inputs.replace(/\s+/g, "+");
+	inputs = "{" + inputs.replace(/\s+/g, "+") + "}";
 	
 	
 	exec(`node get_related_terms.js ${inputs}`, (error, stdout, stderr) => {
