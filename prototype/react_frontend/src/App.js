@@ -1,3 +1,4 @@
+//something anything
 import React, { Component, useState } from 'react';
 import styled from "styled-components";
 import axios from 'axios';
@@ -85,7 +86,7 @@ function LogIn() {
 	  <LogInButton onClick={handleLogIn}>Log In</LogInButton>
 	  */
 	  
-	    <a href="http://localhost:5000/login">
+	    <a href="http://localhost:8888/login">
           <LogInButton onClick={handleLogIn}>Log In</LogInButton>
 		</a>
       
@@ -114,7 +115,7 @@ function MyForm({ isLoggedIn }) {
       try {
 			
 		const response = await axios.post(
-		  'http://localhost:5000/related_terms',
+		  'http://localhost:8888/related_terms',
 		  { 
 			playlist: inputs.playlist, 
 			keyword: ''
