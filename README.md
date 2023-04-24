@@ -29,7 +29,7 @@ Main setup:
 5) Open a second window of "Node.js command prompt". cd into prototype/react_frontend, type "npm install" then type "npm start"; a pop-up of the app should appear in your browser
 6) you should see a "Log In" button on the top right of your screen. Click it, log into Spotify. 
 7) you should see a form with a field asking for Playlist.
-8) currently, you can put in a link to a Spotify playlist. Click submit and wait until a message box pops up on the screen.
+8) put in a link to a Spotify playlist. Click submit and wait until a message box pops up on the screen.
 This message box will return an array of elements where each element is in the form {track: name of track in playlist, keywords: string containing related keywords}.
 
 
