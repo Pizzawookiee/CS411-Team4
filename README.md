@@ -29,7 +29,10 @@ Main setup:
 5) Open a second window of "Node.js command prompt". cd into prototype/react_frontend, type "npm install" then type "npm start"; a pop-up of the app should appear in your browser
 6) you should see a "Log In" button on the top right of your screen. Click it, log into Spotify. 
 7) you should see a form with a field asking for Playlist.
-8) currently, you can put in a link to a Spotify playlist. Click submit and you will see a list of song tracks appear under the first Node.js command prompt window (see step 3).
-The first time you do this will take up to a minute, depending on the size of the playlist. However, subsequent tries with the same playlist will be much faster, as queries are
-cached in MongoDB.
+8) currently, you can put in a link to a Spotify playlist. Click submit and wait until a message box pops up on the screen.
+This message box will return an array of elements where each element is in the form {track: name of track in playlist, keywords: string containing related keywords}
+The first time you query with a specific playlist will take a while, depending on the size of the playlist.
+However, subsequent tries with the same playlist will be much faster, as queries are cached in MongoDB.
+
+BEWARE: the app can take up to a minute with playlists of about 20 songs, and performance is unstable for larger playlists.
 

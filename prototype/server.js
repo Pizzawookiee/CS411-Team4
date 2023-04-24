@@ -322,7 +322,7 @@ async function generateRelatedTermsfromPlaylist(playlistId, playlistName) {
   
   const results = await getGoogleTrendsResults(URLs, tracks);
   
-  console.log(results);
+  //console.log(results);
   
   return results;
   
@@ -391,8 +391,9 @@ app.post('/related_terms', async (req, res) => {
   console.log(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
   const parts = playlist.split('/');
   const playlistID = parts[parts.length - 1];
-  const result = generateRelatedTermsfromPlaylist(playlistID, 'playlist');
-  res.status(200).send(result);
+  const result = await generateRelatedTermsfromPlaylist(playlistID, 'playlist');
+  console.log(result);
+  res.status(200).send(JSON.stringify(result));
 });
 
   
