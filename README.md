@@ -30,7 +30,9 @@ Main setup:
 6) you should see a "Log In" button on the top right of your screen. Click it, log into Spotify. 
 7) you should see a form with a field asking for Playlist.
 8) currently, you can put in a link to a Spotify playlist. Click submit and wait until a message box pops up on the screen.
-This message box will return an array of elements where each element is in the form {track: name of track in playlist, keywords: string containing related keywords}
+This message box will return an array of elements where each element is in the form {track: name of track in playlist, keywords: string containing related keywords}.
+
+
 The first time you query with a specific playlist will take a while, depending on the size of the playlist.
 However, subsequent tries with the same playlist will be much faster, as queries are cached in MongoDB.
 
