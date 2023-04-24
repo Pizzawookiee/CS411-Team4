@@ -121,7 +121,7 @@ function MyForm({ isLoggedIn }) {
 		  }
 		);
 
-		
+		alert(response);
 		
         console.log(response.data);
       } catch (error) {
