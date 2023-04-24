@@ -1,6 +1,45 @@
 //code adapted from https://www.section.io/engineering-education/how-to-setup-nodejs-express-for-react/
 //code adapted from https://github.com/thelinmichael/spotify-web-api-node
 //code adapted from https://github.com/tombaranowicz/SpotifyPlaylistExport/
+//code adapted from https://medium.com/@mikhail.a.zub/web-scraping-google-trends-with-nodejs-1fd064ef0df0
+//code adapted from https://www.scrapehero.com/how-to-increase-web-scraping-speed-using-puppeteer/
+
+const puppeteer = require("puppeteer-extra");
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+const fs = require("fs");
+
+puppeteer.use(StealthPlugin());
+
+
+const { MongoClient } = require('mongodb');
+
+const uri = 'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.0';
+
+//const dbName = 'music';
+
+async function insertDocument(databaseName, collectionName, doc) {
+  const client = await MongoClient.connect(uri);
+  const collection = client.db(databaseName).collection(collectionName);
+  const result = await collection.insertOne(doc);
+  console.log(`Document inserted with the _id: ${result.insertedId}`);
+  client.close();
+}	
+
+
+/*
+client.connect((err) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log('Connected to MongoDB');
+  // Code to save output to MongoDB goes here
+});
+
+*/
+
+
+
 
 const express = require('express'); 
 const app = express();
@@ -130,6 +169,135 @@ async function getPlaylistTracks(playlistId, playlistName) {
   return tracks;
 }
 
+async function getRelatedQueries(URL, searchQuery, browser, result) {
+  //const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  const client = await MongoClient.connect(uri);  
+  try{
+	  //await client.connect();
+	  const database = client.db('music');
+	  const collection = database.collection('tracks');
+	  const db_query = await collection.findOne({ track: searchQuery });  
+	  
+	  if (db_query) {
+		  
+		  result.push(db_query);
+		  
+	  } else {
+		  
+		  const page = await browser.newPage();
+		  await page.setDefaultNavigationTimeout(120000);
+		  const relatedQueries = [];
+
+		  await page.setRequestInterception(true);
+			
+		   page.on('request', (req) => {
+			  if(req.resourceType() == 'stylesheet' || req.resourceType() == 'font' || req.resourceType() == 'image'){
+					req.abort();
+				}
+			  else {
+				  req.continue();
+			  }
+			});
+
+
+
+		  await page.goto(URL);
+		  await page.waitForTimeout(1000);
+		  await page.reload();
+		  const valuePattern = /%22value%22:%22(?<value>[^%]+)/gm; //https://regex101.com/r/PNcP1u/1  
+		  page.on("response", async (response) => {
+			if (response.headers()["content-type"]?.includes("application/")) {
+			  const responseData = await response.text();
+			  const responseURL = await response.url();
+			  if (responseURL.includes("widgetdata/relatedsearches?")) {
+				const values = [...responseURL.matchAll(valuePattern)].map(({ groups }) => groups.value);
+				if (values[0] === searchQuery) {
+				  const parsedData = JSON.parse(responseData.slice(6))?.default;
+				  relatedQueries.push({
+					searchQuery,
+					top: parsedData.rankedList[0].rankedKeyword.map((dataEl) => ({
+					  query: dataEl.query,
+					  //value: dataEl.formattedValue,
+					  //extractedValue: dataEl.value,
+					  //link: "https://trends.google.com" + dataEl.link,
+					})),
+					rising: parsedData.rankedList[1].rankedKeyword.map((dataEl) => ({
+					  query: dataEl.query,
+					  //value: dataEl.formattedValue,
+					  //extractedValue: dataEl.value,
+					  //link: "https://trends.google.com" + dataEl.link,
+					})),
+				  });
+				}
+			  }
+			}
+		  });
+		  await page.waitForTimeout(5000); // wait for 5 seconds to get all responses
+		  //alert(searchQuery, relatedQueries);
+		  const json = JSON.parse(JSON.stringify(relatedQueries));
+		  
+		  const searchQueryValues = [];
+		  
+		  function extractValues(obj) {
+			for (const key in obj) {	  	
+			  if (typeof obj[key] === 'object') {
+				 //console.log('top')
+				 extractValues(obj[key]);
+			  } else if (key === 'query') {
+				 searchQueryValues.push(obj[key]);
+			  }
+			  //if (typeof obj[key] === 'object') {
+			  //  extractValues(obj[key]);
+			  //} else if (key === 'searchQuery') {
+			  //  searchQueryValues.push(obj[key]);
+			  //}
+			}
+		  }
+
+		  extractValues(json);
+
+		  // Return a string of all searchQuery values
+		  const searchQueryString = searchQueryValues.join(',');
+		  
+		  const doc = { track: searchQuery, keywords: searchQueryString};
+		  insertDocument('music','tracks',doc);
+		  
+		  
+		  result.push(doc);
+      }
+	} catch (err) {
+    console.log(err.stack);
+  } finally {
+    await client.close();
+	return true;
+  }
+}
+
+
+async function getGoogleTrendsResults(URLs, searchQueries) {
+  let result = [];
+
+  const browser = await puppeteer.launch({
+    headless: true, //prevents browser windows from popping up
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  }); 	
+  const promises = [];
+
+  for (let i = 0; i < URLs.length; i++) {
+    const URL = URLs[i];
+    const searchQuery = searchQueries[i];
+    promises.push(getRelatedQueries(URL, searchQuery, browser, result)); //pushes all requests into promises
+  }
+
+  const relatedQueries = await Promise.all(promises); //runs all promises at same time
+  //process.stdout.write(JSON.stringify(result));
+  //console.log(result);
+  return result;
+  
+}
+
+
+
 async function generateRelatedTermsfromPlaylist(playlistId, playlistName) {
 
   const data = await spotifyApi.getPlaylistTracks(playlistId, {
@@ -142,16 +310,52 @@ async function generateRelatedTermsfromPlaylist(playlistId, playlistName) {
   // console.log('The playlist contains these tracks: ', data.body.items[0].track);
   // console.log("'" + playlistName + "'" + ' contains these tracks:');
   let tracks = [];
-
+  //let tracks = '';
   for (let track_obj of data.body.items) {
-    const track = track_obj.track
-	//add exec call to file for generating ranking for one song title
-    tracks.push(track.name);
+    const track = track_obj.track;
+	//tracks + track.name;
+    tracks.push(track.name.replace(/\s+/g, "+"));
     //console.log(track.name + " : " + track.artists[0].name)
   }
-  console.log(tracks);
+  
+  const URLs = tracks.map((query) => `https://trends.google.com/trends/explore?date=now 1-d&geo=US&q=${encodeURI(query)}&hl=en`);
+  
+  const results = await getGoogleTrendsResults(URLs, tracks);
+  
+  //console.log(results);
+  
+  return results;
+  
+  //console.log(tracks);
+  
+  
+  
+  //DEPRECATED FROM BACK WHEN PUPPETEER FUNCTIONALITY WAS LOCATED ON ANOTHER FILE
+  //FOR CONVENIENCE EVERYTHING MOVED INTO THIS FILE
+  /*
+  let trackStr = tracks.toString();
+  
+  trackStr = "{" + trackStr.toLowerCase().replace(/[^a-z, ]/g, '').replace(/\s+/g, "+") + "}";
+  //console.log(trackStr);
+  //console.log(typeof(trackStr));
+  
+  
+  let temp = [];
+  
+  exec(`node get_related_terms.js ${trackStr}`, (error, stdout, stderr) => {
+	  if (error) {
+		console.error(`exec error: ${error}`);
+		return;
+	  }
+	  temp = stdout;
+	  console.log('e');
+	  //console.log(stdout); //yay this works
+	  return stdout;
+	});
+  console.log(temp);
   console.log("---------------+++++++++++++++++++++++++")
-  return tracks;
+  //return tracks;
+  */
 }
 
 //POST route instructions
@@ -171,169 +375,7 @@ app.post('/test_google_trends', (req, res) => {
   });
   //res.status(200).send(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
 });
-/*
-app.post('/test_spotify_api', (req, res) => {
-  const { playlist, keyword } = req.body;
-  console.log(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
-  
-  const response = await fetch('http://localhost:5000/api/logged/');
-  const token = response.headers.get('token');
 
-  //const token = req.cookies.token; // Get the value of the 'token' cookie
-  console.log(`Token: ${token}`);
-
-  console.log('pulling spotify playlist data...');
-  exec(`node get_playlist_data.js ${token} ${playlist}`, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
-    res.header("Access-Control-Allow-Origin", "*");
-    res.status(200).send(stdout) 
-  });
-});
-*/
-/*
-app.post('/token', (req, res) => {
-	const params = req.body;
-	const param_string = encodeURIComponent(JSON.stringify(params));
-	console.log(param_string);
-	console.log(decodeURIComponent(param_string));
-	//const token = params.data;
-	//res.set('Set-Cookie', `token_info=${encodeURIComponent(params.data.token)}`);
-	res.cookie('token', param_string);
-	//console.log(req.cookies.token);
-	console.log(params); //seems like this works!
-	console.log(res.getHeaders());
-	res.sendStatus(200);
-});
-*/
-
-//dummy code until old /token functionality removed
-/*
-app.post('/token', (req, res) => {
-	res.sendStatus(200);
-});
-*/
-
-/*
-app.post('/token', (req, res) => {
-	const params = req.body;
-	const param_string = encodeURIComponent(JSON.stringify(params));
-	//console.log(param_string);
-	//console.log(decodeURIComponent(param_string));
-	res.cookie('token', param_string);
-	//console.log(params); 
-	console.log(res.getHeaders()['set-cookie']);
-	res.sendStatus(200);
-});
-
-
-
-
-app.get('/token', (req, res) => {
-  //console.log(req.headers);
-  //console.log(req.cookies);
-  //const token = JSON.parse(req.cookies.token);
-  //const token = req.cookies.token; //testing
-  //const token = req.get('set-cookie');
-  const token = res.getHeaders()['set-cookie'];
-  
-  console.log(token);
-  
-  if (token !== null && token !== undefined) {
-	
-    res.send(token);
-  } else {
-    res.send('No data found in cookie');
-  }
-});
-*/
-/*
-app.post('/token', (req, res) => {
-  const params = req.body;
-  const param_string = encodeURIComponent(JSON.stringify(params));
-  console.log(params);
-  res.cookie('token', param_string, {
-    httpOnly: true,
-    sameSite: 'strict',
-	path: '/token',
-  });
-  res.sendStatus(200);
-});
-
-app.get('/token', (req, res) => {
-  const token = req.cookies['token'];
-  if (token) {
-    res.send(token);
-  } else {
-    res.send('No data found in cookie');
-  }
-});
-*/
-/*
-app.post('/test_spotify_api', async (req, res) => {
-  const { playlist, keyword } = req.body;
-  console.log(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
-  const response = await axios.get('http://localhost:5000/token/');
-  console.log(response); //testing
-  
-  try {
-    const response = await axios.get('http://localhost:5000/token/', { responseType: 'json' }); 
-    const token = response.data.token; //correct property name to access token
-
-    console.log(`Token: ${token}`);
-
-    console.log('pulling spotify playlist data...');
-    exec(`node get_playlist_data.js ${token} ${playlist}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-      console.error(`stderr: ${stderr}`);
-      res.header("Access-Control-Allow-Origin", "*");
-      res.status(200).send(stdout) 
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error fetching data" });
-  }
-  
-});
-*/
-
-//BELOW is a temporary version of the POST request to test_spotify_api which also takes in the token from frontend
-//The token should actually be taken from backend since frontend is not secure, but I have no idea how to do this
-//DEPRECATED CODE, and token now removed from front end.
-/*
-app.post('/test_spotify_api', async (req, res) => {
-  const { playlist, keyword } = req.body;
-  console.log(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
-  const token = req.headers.authorization;
-  console.log(token);
-  
-  try {
-    console.log('pulling spotify playlist data...');
-    exec(`node get_playlist_data.js ${token} ${playlist}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-      console.error(`stderr: ${stderr}`);
-      res.header("Access-Control-Allow-Origin", "*");
-      res.status(200).send(stdout) 
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error fetching data" });
-  }
-  
-});
-*/
 
 app.post('/test_spotify_api', async (req, res) => {
   const { playlist, keyword } = req.body;
@@ -349,8 +391,9 @@ app.post('/related_terms', async (req, res) => {
   console.log(`New contact form submission: Playlist: ${playlist}, Keyword: ${keyword}`);
   const parts = playlist.split('/');
   const playlistID = parts[parts.length - 1];
-  generateRelatedTermsfromPlaylist(playlistID, 'playlist');
-  res.status(200).send('worked');
+  const result = await generateRelatedTermsfromPlaylist(playlistID, 'playlist');
+  console.log(result);
+  res.status(200).send(JSON.stringify(result));
 });
 
   
@@ -364,19 +407,3 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 app.get('/express_backend', (req, res) => { //Line 9
   res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' }); 
 }); 
-/*
-// API endpoint that returns the log data as JSON
-app.get('/logs', (req, res) => {
-  // Get the log buffer from the morgan middleware
-  const logs = req.app.get('morgan').buffer;
-  
-  // Split the logs into an array of lines
-  const lines = logs.trim().split('\n');
-  
-  // Map each line to an object with a "message" property
-  const logData = lines.map(line => ({ message: line }));
-
-  res.json(logData);
-});
-*/
-//app.get('/token', (req,res) => {res.status(200).send(Cookies.get('token'))});
