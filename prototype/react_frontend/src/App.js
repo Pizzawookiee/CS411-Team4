@@ -1,19 +1,68 @@
+//something anything
 import React, { Component, useState } from 'react';
 import styled from "styled-components";
 import axios from 'axios';
 import Cookies from 'js-cookie';
+
+function Instructions({ isLoggedIn }) {
+  return (
+    <div style={{ position: 'fixed', bottom: 10, right: 10, color: 'white' }}>
+      {isLoggedIn ? (
+        <p>
+          1. Copy and paste Spotify playlist link into white textbox <br />
+          2. Click Submit <br />
+          3. Wait 20-30 seconds <br />
+          4. Inspect your findings
+        </p>
+      ) : (
+        <p>Click Login to start using the app.</p>
+      )}
+    </div>
+  );
+}
+
+// Define the background image
+const BackgroundImage = styled.div`
+  background-image: url('/path/to/background/image.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+`;
+
+// Define the text box for instructions
+const TextBox = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+`;
+
+// Define the title
+const Title = styled.h1`
+  text-align: center;
+  font-size: 36px;
+  color: #ffffff;
+`;
 
 const CenteredContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-image: url("cat.jpg");
+  background-size: cover;
 `;
 
 const TextForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  label {
+    color: white;
+  }
 `;
 
 const Button = styled.button`
@@ -85,7 +134,7 @@ function LogIn() {
 	  <LogInButton onClick={handleLogIn}>Log In</LogInButton>
 	  */
 	  
-	    <a href="http://localhost:5000/login">
+	    <a href="http://localhost:8888/login">
           <LogInButton onClick={handleLogIn}>Log In</LogInButton>
 		</a>
       
@@ -114,7 +163,7 @@ function MyForm({ isLoggedIn }) {
       try {
 			
 		const response = await axios.post(
-		  'http://localhost:5000/related_terms',
+		  'http://localhost:8888/related_terms',
 		  { 
 			playlist: inputs.playlist, 
 			keyword: ''
@@ -149,6 +198,8 @@ function MyForm({ isLoggedIn }) {
 
   return (
     <CenteredContainer>
+      {/* ... */}
+      {isLoggedIn && <Instructions isLoggedIn={isLoggedIn} />}
       {isLoggedIn ? (
         <TextForm onSubmit={handleSubmit}>
           <label>
