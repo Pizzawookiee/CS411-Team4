@@ -44,7 +44,7 @@ client.connect((err) => {
 const express = require('express'); 
 const app = express();
 require('dotenv').config();
-const port = process.env.PORT || 8888; 
+const port = process.env.PORT = 8888; 
 const bodyParser = require('body-parser');
 const config = require('./config/spotify.js');
 const { exec } = require('child_process');
