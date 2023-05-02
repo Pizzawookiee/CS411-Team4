@@ -101,7 +101,7 @@ function LogIn() {
 	//this block doesn't work for some reason  
 	/*
     try {	
-      const response = await axios.get('http://localhost:5000/login');
+      const response = await axios.get('http://localhost:8888/login');
       console.log(response.data);  
       Cookies.set('isLoggedIn', true);
       setIsLoggedIn(true);
