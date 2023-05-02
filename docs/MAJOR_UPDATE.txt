@@ -1,0 +1,9 @@
+The final version of the app does not match initial user stories.
+
+Original functionality was to rank songs in a Spotify playlist by "degrees of separation" from a keyword using Google Trends data.
+
+For example, a song title would be sent to Google Trends, which would return a list of related queries. If the keyword appears in this first set of queries
+the degree of separation is 1. If the keyword appears in the set of queries related to the first query set, degree of separation is 2.
+
+This proved to be prohibitively complicated to code and too inefficient to implement due to the Puppeteer scraping of Google Trends serving as a bottleneck.
+So, the app just returns an array of lists of Google Trends related queries for each song title in a Spotify playlist.
