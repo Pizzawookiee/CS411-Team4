@@ -4,22 +4,35 @@ import styled from "styled-components";
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
+// added box to ensure text was visible since the background image may make 
+// this less visible
 function Instructions({ isLoggedIn }) {
   return (
-    <div style={{ position: 'fixed', bottom: 10, right: 10, color: 'white' }}>
-      {isLoggedIn ? (
-        <p>
-          1. Copy and paste Spotify playlist link into white textbox <br />
-          2. Click Submit <br />
-          3. Wait 20-30 seconds <br />
-          4. Inspect your findings
-        </p>
-      ) : (
-        <p>Click Login to start using the app.</p>
-      )}
+    <div style={{ 
+        position: 'fixed',
+        bottom: 10, 
+        right: 10,
+        backgroundColor: 'black',
+        border: '2px solid black',
+        padding: '10px',
+        }}>
+      <div style={{ color: 'white' }}>
+        {isLoggedIn ? (
+          <p>
+            1. Copy and paste Spotify playlist link into white textbox <br />
+            2. Click Submit <br />
+            3. Wait 20-30 seconds <br />
+            4. Inspect your findings
+          </p>
+        ) : (
+          <p>Click Login to start using the app.</p>
+        )}
+      </div>
     </div>
   );
 }
+
+
 
 // Define the background image
 const BackgroundImage = styled.div`
