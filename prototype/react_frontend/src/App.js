@@ -236,9 +236,14 @@ function MyForm({ isLoggedIn }) {
 
 function App() {
   return (
-	<>
-	  <LogIn />
-	</>
+  <div>
+    <p>
+      CS411 Section A2 Team 4: David Lee, Sean Lin, Taha Dawood 
+    </p>
+    <CenteredContainer>
+      <LogIn />
+    </CenteredContainer>
+  </div>
   );
 }
 	  
