@@ -4,108 +4,10 @@ import styled from "styled-components";
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-function App() {
-  return (
-  <p>
-    CS411 Section A2 Team 4
-    <CenteredContainer>
-	    <LogIn />
-    </CenteredContainer>
-  </p>
-  );
-}
 
-function MyForm({ isLoggedIn }) {
-  const [showWarning, setShowWarning] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const initialInputs = {
-    playlist: '',
-    keyword: '',
-  };
-  const [inputs, setInputs] = useState(initialInputs);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (inputs.playlist === '') {
-      setShowWarning(true);
-    } else {
-      setIsSubmitting(true);
-      try {
-			
-		const response = await axios.post(
-		  'http://localhost:8888/related_terms',
-		  { 
-			playlist: inputs.playlist, 
-			keyword: ''
-		  }
-		);
-
-		alert(JSON.stringify(response.data));
-		
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-        alert('error');
-      }
-      setShowWarning(false);
-      setIsSubmitting(false);
-    }
-  };
-
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setInputs({
-      ...inputs,
-      [name]: value,
-    });
-  };
-
-  const handleReset = () => {
-    setInputs(initialInputs);
-    setShowWarning(false);
-  };
-
-  return (
-    <RandomContainer>
-      {/* ... */}
-      {isLoggedIn && <Instructions isLoggedIn={isLoggedIn} />}
-      {isLoggedIn ? (
-        <TextForm onSubmit={handleSubmit}>
-          <label>
-            Enter a URL to a Spotify playlist (required) ->
-            <input type="text" name="playlist" value={inputs.playlist} onChange={handleInputChange} />
-          </label>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
-            <Button onClick={handleReset}>Reset</Button>
-            <Button onClick={handleSubmit} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.5 : 1 }}>
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </Button>
-            {showWarning && <WarningText>Please enter a playlist URL</WarningText>}
-          </div>
-        </TextForm>
-      ) : (
-        <div>Please log in to Spotify to use this app.</div>
-      )}
-    </RandomContainer>
-  );
-}
-
-	  
-export default App;
-
-// added box to ensure text was visible since the background image may make 
-// this less visible
 function Instructions({ isLoggedIn }) {
   return (
-    <div style={{ 
-        position: 'fixed',
-        bottom: 10, 
-        right: 10,
-        backgroundColor: 'black',
-        border: '2px solid black',
-        padding: '10px',
-        }}>
+    <div style={{position: 'fixed', bottom: 10, right: 10, backgroundColor: 'black', border: '2px solid black', padding: '10px',}}>
       <div style={{ color: 'white' }}>
         {isLoggedIn ? (
           <p>
@@ -121,8 +23,6 @@ function Instructions({ isLoggedIn }) {
     </div>
   );
 }
-
-
 
 // Define the background image
 const BackgroundImage = styled.div`
@@ -159,13 +59,12 @@ const CenteredContainer = styled.div`
   background-size: cover;
 `;
 
-
 const RandomContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url("https://picsum.photos/200/300);
+  background-image: url("https://picsum.photos/2000/2000");
   background-size: cover;
 `;
 
@@ -258,6 +157,81 @@ function LogIn() {
 
 
 
+function MyForm({ isLoggedIn }) {
+  const [showWarning, setShowWarning] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const initialInputs = {
+    playlist: '',
+    keyword: '',
+  };
+  const [inputs, setInputs] = useState(initialInputs);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (inputs.playlist === '') {
+      setShowWarning(true);
+    } else {
+      setIsSubmitting(true);
+      try {
+			
+		const response = await axios.post(
+		  'http://localhost:8888/related_terms',
+		  { 
+			playlist: inputs.playlist, 
+			keyword: ''
+		  }
+		);
+
+		alert(JSON.stringify(response.data));
+		
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+        alert('error');
+      }
+      setShowWarning(false);
+      setIsSubmitting(false);
+    }
+  };
+
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
+  };
+
+  const handleReset = () => {
+    setInputs(initialInputs);
+    setShowWarning(false);
+  };
+
+  return (
+    <RandomContainer>
+      {/* ... */}
+      {isLoggedIn && <Instructions isLoggedIn={isLoggedIn} />}
+      {isLoggedIn ? (
+        <TextForm onSubmit={handleSubmit}>
+          <label>
+            Enter a URL to a Spotify playlist (required) ->
+            <input type="text" name="playlist" value={inputs.playlist} onChange={handleInputChange} />
+          </label>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
+            <Button onClick={handleReset}>Reset</Button>
+            <Button onClick={handleSubmit} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.5 : 1 }}>
+              {isSubmitting ? 'Submitting...' : 'Submit'}
+            </Button>
+            {showWarning && <WarningText>Please enter a playlist URL</WarningText>}
+          </div>
+        </TextForm>
+      ) : (
+        <div>Please log in to Spotify to use this app.</div>
+      )}
+    </RandomContainer>
+  );
+}
 
 //DEPRECATED code for keyword field 
 /*
@@ -269,4 +243,17 @@ function LogIn() {
 
 
 
-
+function App() {
+  return (
+  <div>
+    <p>
+      CS411 Section A2 Team 4: David Lee, Sean Lin, Taha Dawood 
+    </p>
+      <CenteredContainer>
+        <LogIn />
+      </CenteredContainer>
+  </div>
+  );
+}
+	  
+export default App;
