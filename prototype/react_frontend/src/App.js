@@ -59,6 +59,15 @@ const CenteredContainer = styled.div`
   background-size: cover;
 `;
 
+const RandomContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("https://picsum.photos/2000/2000");
+  background-size: cover;
+`;
+
 const TextForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -200,7 +209,7 @@ function MyForm({ isLoggedIn }) {
   };
 
   return (
-    <CenteredContainer>
+    <RandomContainer>
       {/* ... */}
       {isLoggedIn && <Instructions isLoggedIn={isLoggedIn} />}
       {isLoggedIn ? (
@@ -220,7 +229,7 @@ function MyForm({ isLoggedIn }) {
       ) : (
         <div>Please log in to Spotify to use this app.</div>
       )}
-    </CenteredContainer>
+    </RandomContainer>
   );
 }
 
@@ -240,9 +249,9 @@ function App() {
     <p>
       CS411 Section A2 Team 4: David Lee, Sean Lin, Taha Dawood 
     </p>
-    <CenteredContainer>
-      <LogIn />
-    </CenteredContainer>
+      <CenteredContainer>
+        <LogIn />
+      </CenteredContainer>
   </div>
   );
 }
