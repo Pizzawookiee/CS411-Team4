@@ -9,6 +9,7 @@ function Instructions({ isLoggedIn }) {
   return (
     <div style={{position: 'fixed', bottom: 10, right: 10, backgroundColor: 'lightgoldenrodyellow', border: '2px solid white', padding: '10px',}}>
       <div style={{ color: 'black' }}>
+=======
         {isLoggedIn ? (
           <p>
             1. Copy and paste Spotify playlist link into white textbox <br />
@@ -187,7 +188,7 @@ function MyForm({ isLoggedIn }) {
 		);
 
 		alert(JSON.stringify(response.data))
-		
+		    console.log(response.data);
       } catch (error) {
         console.error(error);
         alert('Error: Please check to make sure you are entering a valid spotify URL link');
@@ -253,8 +254,10 @@ function App() {
       CS411 Section A2 Team 4: David Lee, Sean Lin, Taha Dawood 
     </p>
         <LogIn />
+
   </div>
   );
 }
 	  
 export default App;
+
