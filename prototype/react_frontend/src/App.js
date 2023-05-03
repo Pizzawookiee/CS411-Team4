@@ -7,8 +7,9 @@ import Cookies from 'js-cookie';
 
 function Instructions({ isLoggedIn }) {
   return (
-    <div style={{position: 'fixed', bottom: 10, right: 10, backgroundColor: 'black', border: '2px solid black', padding: '10px',}}>
-      <div style={{ color: 'white' }}>
+    <div style={{position: 'fixed', bottom: 10, right: 10, backgroundColor: 'lightgoldenrodyellow', border: '2px solid white', padding: '10px',}}>
+      <div style={{ color: 'black' }}>
+=======
         {isLoggedIn ? (
           <p>
             1. Copy and paste Spotify playlist link into white textbox <br />
@@ -64,7 +65,7 @@ const RandomContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url("https://picsum.photos/2000/2000");
+  background-image: url("https://picsum.photos/4000/2500");
   background-size: cover;
 `;
 
@@ -138,6 +139,7 @@ function LogIn() {
     <div>
       {isLoggedIn ? (
 	    <>
+
 			<MyForm isLoggedIn={isLoggedIn} />
 			<LogInButton onClick={handleLogOut}>Log Out</LogInButton>
 		</>
@@ -145,11 +147,14 @@ function LogIn() {
 	  /*
 	  <LogInButton onClick={handleLogIn}>Log In</LogInButton>
 	  */
-	  
-	    <a href="http://localhost:8888/login">
-          <LogInButton onClick={handleLogIn}>Log In</LogInButton>
-		</a>
-      
+    <>
+      <CenteredContainer>
+        <h1> Please log in with your Spotify account</h1>
+	      <a href="http://localhost:8888/login">
+           <LogInButton onClick={handleLogIn}>Log In</LogInButton>
+		  </a>
+      </CenteredContainer>
+    </>
 	  )}
     </div>
   );
@@ -182,12 +187,11 @@ function MyForm({ isLoggedIn }) {
 		  }
 		);
 
-		alert(JSON.stringify(response.data));
-		
-        console.log(response.data);
+		alert(JSON.stringify(response.data))
+		    console.log(response.data);
       } catch (error) {
         console.error(error);
-        alert('error');
+        alert('Error: Please check to make sure you are entering a valid spotify URL link');
       }
       setShowWarning(false);
       setIsSubmitting(false);
@@ -249,11 +253,11 @@ function App() {
     <p>
       CS411 Section A2 Team 4: David Lee, Sean Lin, Taha Dawood 
     </p>
-      <CenteredContainer>
         <LogIn />
-      </CenteredContainer>
+
   </div>
   );
 }
 	  
 export default App;
+
