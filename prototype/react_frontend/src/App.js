@@ -9,7 +9,7 @@ function Instructions({ isLoggedIn }) {
   return (
     <div style={{position: 'fixed', bottom: 10, right: 10, backgroundColor: 'lightgoldenrodyellow', border: '2px solid white', padding: '10px',}}>
       <div style={{ color: 'black' }}>
-=======
+=====================================
         {isLoggedIn ? (
           <p>
             1. Copy and paste Spotify playlist link into white textbox <br />
@@ -17,9 +17,11 @@ function Instructions({ isLoggedIn }) {
             3. Wait 20-30 seconds <br />
             4. Inspect your findings
           </p>
-        ) : (
+        ) 
+        : (
           <p>Click Login to start using the app.</p>
         )}
+  ======================================
       </div>
     </div>
   );
@@ -107,6 +109,24 @@ const WarningText = styled.p`
   color: red;
 `;
 
+
+function ChangeBack() {
+  const [curBackground, SetCurBackground] = useState(0);
+
+  const handleChange = () => {
+    SetCurBackground(curBackground + 1);
+  };
+
+  
+  const backgroundLink = "https://picsum.photos/4000/2500?random=${curBackground}";
+
+  return (
+    <div style = {{ backgroundImage: "url(${backgroundLink})", backgroundSize: "cover" }}>
+      <Button onClick={handleChange}>Change Background</Button>
+    </div>
+  );
+  }
+
 function LogIn() {
   const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get('isLoggedIn') === 'true');
 
@@ -135,6 +155,8 @@ function LogIn() {
     setIsLoggedIn(false);
   };
 
+
+
   return (
     <div>
       {isLoggedIn ? (
@@ -142,6 +164,7 @@ function LogIn() {
 
 			<MyForm isLoggedIn={isLoggedIn} />
 			<LogInButton onClick={handleLogOut}>Log Out</LogInButton>
+
 		</>
       ) : (
 	  /*
@@ -152,6 +175,7 @@ function LogIn() {
         <h1> Please log in with your Spotify account</h1>
 	      <a href="http://localhost:8888/login">
            <LogInButton onClick={handleLogIn}>Log In</LogInButton>
+           
 		  </a>
       </CenteredContainer>
     </>
@@ -212,6 +236,7 @@ function MyForm({ isLoggedIn }) {
     setShowWarning(false);
   };
 
+
   return (
     <RandomContainer>
       {/* ... */}
@@ -247,17 +272,61 @@ function MyForm({ isLoggedIn }) {
 
 
 
-function App() {
+function ButtonIncrement(props) {
+  
+   return (
+     <button style={{ marginLeft: '.5rem'}} onClick={props.onClickFunc}>
+     +1
+     </button>
+   )
+}
+
+
+
+function Display(props) {
   return (
-  <div>
+    <label style={{ marginLeft: '.5rem'}} >{props.message}</label>
+  )
+}
+
+function Clickbut() {
+  const [counter, setCounter] = useState(0);
+  const incrementCounter = () => setCounter(counter + 1);
+  const backgroundLink = 'https://picsum.photos/4000/2500?random=${counter}';
+
+  return (
+    <div style = {{ backgroundImage: "url(${backgroundLink})", backgroundSize: "cover" }}>
+      <ButtonIncrement onClickFunc={incrementCounter}/>
+      <Display message={counter}/> 
+    </div>
+  );
+}
+
+
+
+function App() {
+  const [curBackground, SetcurBackground] = useState(0);
+
+  const handleChange = () => {
+    SetcurBackground(curBackground + 1);
+  };
+
+  
+  const backgroundLink = "https://picsum.photos/4000/2500?random=${curBackground}";
+
+  return (
+  <div style = {{ backgroundImage: "url(${backgroundLink})", backgroundSize: "cover" }}>
     <p>
       CS411 Section A2 Team 4: David Lee, Sean Lin, Taha Dawood 
     </p>
+        <Button onClick={handleChange}>Change Background</Button>
         <LogIn />
 
   </div>
   );
 }
+
+
 	  
 export default App;
 
