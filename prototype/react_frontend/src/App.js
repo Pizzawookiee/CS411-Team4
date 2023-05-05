@@ -1,4 +1,3 @@
-//something anything
 import React, { Component, useState } from 'react';
 import styled from "styled-components";
 import axios from 'axios';
@@ -10,8 +9,6 @@ function Instructions({ isLoggedIn }) {
     <div style={{position: 'fixed', bottom: 10, right: 10, backgroundColor: 'lightgoldenrodyellow', border: '2px solid white', padding: '10px',}}>
       <div style={{ color: 'black' }}>
 =====================================
-=======
-=======
         {isLoggedIn ? (
           <p>
             1. Copy and paste Spotify playlist link into white textbox <br />
