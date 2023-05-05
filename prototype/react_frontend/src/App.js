@@ -9,6 +9,8 @@ function Instructions({ isLoggedIn }) {
   return (
     <div style={{position: 'fixed', bottom: 10, right: 10, backgroundColor: 'lightgoldenrodyellow', border: '2px solid white', padding: '10px',}}>
       <div style={{ color: 'black' }}>
+=====================================
+=======
 =======
         {isLoggedIn ? (
           <p>
@@ -17,9 +19,11 @@ function Instructions({ isLoggedIn }) {
             3. Wait 20-30 seconds <br />
             4. Inspect your findings
           </p>
-        ) : (
+        ) 
+        : (
           <p>Click Login to start using the app.</p>
         )}
+  ======================================
       </div>
     </div>
   );
@@ -107,6 +111,8 @@ const WarningText = styled.p`
   color: red;
 `;
 
+
+
 function LogIn() {
   const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get('isLoggedIn') === 'true');
 
@@ -135,6 +141,8 @@ function LogIn() {
     setIsLoggedIn(false);
   };
 
+
+
   return (
     <div>
       {isLoggedIn ? (
@@ -142,6 +150,7 @@ function LogIn() {
 
 			<MyForm isLoggedIn={isLoggedIn} />
 			<LogInButton onClick={handleLogOut}>Log Out</LogInButton>
+
 		</>
       ) : (
 	  /*
@@ -212,9 +221,27 @@ function MyForm({ isLoggedIn }) {
     setShowWarning(false);
   };
 
+  const [curBackground, setCurBackground] = useState(0);
+
+  const handleChange = () => {
+    setCurBackground(curBackground + 1);
+  };
+
+
+  const RandomContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("hhttps://picsum.photos/4000/2500?random=${curBackground}");
+  background-size: cover;
+`;
+
+
   return (
-    <RandomContainer>
+    <div style={{ backgroundImage: `url(https://picsum.photos/4000/2500?random=${curBackground})`, backgroundSize: "cover" }}>
       {/* ... */}
+      <Button onClick={handleChange}>Change Background</Button>
       {isLoggedIn && <Instructions isLoggedIn={isLoggedIn} />}
       {isLoggedIn ? (
         <TextForm onSubmit={handleSubmit}>
@@ -233,7 +260,7 @@ function MyForm({ isLoggedIn }) {
       ) : (
         <div>Please log in to Spotify to use this app.</div>
       )}
-    </RandomContainer>
+    </div>
   );
 }
 
@@ -244,6 +271,10 @@ function MyForm({ isLoggedIn }) {
             <input type="text" name="keyword" value={inputs.keyword} onChange={handleInputChange} />
           </label>
 */        
+
+
+
+
 
 
 
@@ -258,6 +289,8 @@ function App() {
   </div>
   );
 }
+
+
 	  
 export default App;
 
