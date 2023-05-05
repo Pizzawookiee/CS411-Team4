@@ -7,3 +7,5 @@ the degree of separation is 1. If the keyword appears in the set of queries rela
 
 This proved to be prohibitively complicated to code and too inefficient to implement due to the Puppeteer scraping of Google Trends serving as a bottleneck.
 So, the app just returns an array of lists of Google Trends related queries for each song title in a Spotify playlist.
+
+Demo video link: https://drive.google.com/file/d/1H7MB3jJ1qfHyN4E3bRtipDfaungrGfZj/view?usp=share_link
