@@ -110,22 +110,6 @@ const WarningText = styled.p`
 `;
 
 
-function ChangeBack() {
-  const [curBackground, SetCurBackground] = useState(0);
-
-  const handleChange = () => {
-    SetCurBackground(curBackground + 1);
-  };
-
-  
-  const backgroundLink = "https://picsum.photos/4000/2500?random=${curBackground}";
-
-  return (
-    <div style = {{ backgroundImage: "url(${backgroundLink})", backgroundSize: "cover" }}>
-      <Button onClick={handleChange}>Change Background</Button>
-    </div>
-  );
-  }
 
 function LogIn() {
   const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get('isLoggedIn') === 'true');
@@ -236,10 +220,27 @@ function MyForm({ isLoggedIn }) {
     setShowWarning(false);
   };
 
+  const [curBackground, setCurBackground] = useState(0);
+
+  const handleChange = () => {
+    setCurBackground(curBackground + 1);
+  };
+
+
+  const RandomContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url("hhttps://picsum.photos/4000/2500?random=${curBackground}");
+  background-size: cover;
+`;
+
 
   return (
-    <RandomContainer>
+    <div style={{ backgroundImage: `url(https://picsum.photos/4000/2500?random=${curBackground})`, backgroundSize: "cover" }}>
       {/* ... */}
+      <Button onClick={handleChange}>Change Background</Button>
       {isLoggedIn && <Instructions isLoggedIn={isLoggedIn} />}
       {isLoggedIn ? (
         <TextForm onSubmit={handleSubmit}>
@@ -258,7 +259,7 @@ function MyForm({ isLoggedIn }) {
       ) : (
         <div>Please log in to Spotify to use this app.</div>
       )}
-    </RandomContainer>
+    </div>
   );
 }
 
@@ -272,54 +273,16 @@ function MyForm({ isLoggedIn }) {
 
 
 
-function ButtonIncrement(props) {
-  
-   return (
-     <button style={{ marginLeft: '.5rem'}} onClick={props.onClickFunc}>
-     +1
-     </button>
-   )
-}
 
-
-
-function Display(props) {
-  return (
-    <label style={{ marginLeft: '.5rem'}} >{props.message}</label>
-  )
-}
-
-function Clickbut() {
-  const [counter, setCounter] = useState(0);
-  const incrementCounter = () => setCounter(counter + 1);
-  const backgroundLink = 'https://picsum.photos/4000/2500?random=${counter}';
-
-  return (
-    <div style = {{ backgroundImage: "url(${backgroundLink})", backgroundSize: "cover" }}>
-      <ButtonIncrement onClickFunc={incrementCounter}/>
-      <Display message={counter}/> 
-    </div>
-  );
-}
 
 
 
 function App() {
-  const [curBackground, SetcurBackground] = useState(0);
-
-  const handleChange = () => {
-    SetcurBackground(curBackground + 1);
-  };
-
-  
-  const backgroundLink = "https://picsum.photos/4000/2500?random=${curBackground}";
-
   return (
-  <div style = {{ backgroundImage: "url(${backgroundLink})", backgroundSize: "cover" }}>
+  <div>
     <p>
       CS411 Section A2 Team 4: David Lee, Sean Lin, Taha Dawood 
     </p>
-        <Button onClick={handleChange}>Change Background</Button>
         <LogIn />
 
   </div>
