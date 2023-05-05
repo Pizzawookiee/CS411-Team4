@@ -10,6 +10,8 @@ function Instructions({ isLoggedIn }) {
     <div style={{position: 'fixed', bottom: 10, right: 10, backgroundColor: 'lightgoldenrodyellow', border: '2px solid white', padding: '10px',}}>
       <div style={{ color: 'black' }}>
 =====================================
+=======
+=======
         {isLoggedIn ? (
           <p>
             1. Copy and paste Spotify playlist link into white textbox <br />
@@ -159,7 +161,6 @@ function LogIn() {
         <h1> Please log in with your Spotify account</h1>
 	      <a href="http://localhost:8888/login">
            <LogInButton onClick={handleLogIn}>Log In</LogInButton>
-           
 		  </a>
       </CenteredContainer>
     </>
