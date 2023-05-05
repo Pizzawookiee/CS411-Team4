@@ -62,14 +62,6 @@ const CenteredContainer = styled.div`
   background-size: cover;
 `;
 
-const RandomContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-image: url("https://picsum.photos/4000/2500");
-  background-size: cover;
-`;
 
 const TextForm = styled.form`
   display: flex;
@@ -156,7 +148,7 @@ function LogIn() {
 	  */
     <>
       <CenteredContainer>
-        <h1> Please log in with your Spotify account</h1>
+        <h1 style={{ color: 'white', textAlign: 'center', marginTop: '-500px' }}>Please log in with your Spotify account</h1>
 	      <a href="http://localhost:8888/login">
            <LogInButton onClick={handleLogIn}>Log In</LogInButton>
            
@@ -232,34 +224,42 @@ function MyForm({ isLoggedIn }) {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url("hhttps://picsum.photos/4000/2500?random=${curBackground}");
+  background-image: url("https://picsum.photos/4000/2500?random=${curBackground}");
   background-size: cover;
 `;
 
 
   return (
-    <div style={{ backgroundImage: `url(https://picsum.photos/4000/2500?random=${curBackground})`, backgroundSize: "cover" }}>
-      {/* ... */}
-      <Button onClick={handleChange}>Change Background</Button>
-      {isLoggedIn && <Instructions isLoggedIn={isLoggedIn} />}
-      {isLoggedIn ? (
-        <TextForm onSubmit={handleSubmit}>
-          <label>
-            Enter a URL to a Spotify playlist (required) ->
-            <input type="text" name="playlist" value={inputs.playlist} onChange={handleInputChange} />
-          </label>
+    <>
+      <RandomContainer>
+        {/* ... */}
+        
+        {isLoggedIn && <Instructions isLoggedIn={isLoggedIn} />}
+        {isLoggedIn ? (
+        <>
+          <TextForm onSubmit={handleSubmit}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
-            <Button onClick={handleReset}>Reset</Button>
-            <Button onClick={handleSubmit} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.5 : 1 }}>
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </Button>
-            {showWarning && <WarningText>Please enter a playlist URL</WarningText>}
+           <Button onClick={handleChange}>Change Background</Button>
           </div>
-        </TextForm>
-      ) : (
-        <div>Please log in to Spotify to use this app.</div>
-      )}
-    </div>
+          <label style={{ padding: '10px', border: '1px solid black', background: '#03002e' }}>
+            Enter a URL to a Spotify playlist (required) ->
+            <input type="text" name="playlist" value={inputs.playlist} onChange={handleInputChange} style={{ color: 'black' }} />
+          </label>
+
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
+              <Button onClick={handleReset}>Reset</Button>
+              <Button onClick={handleSubmit} disabled={isSubmitting} style={{ opacity: isSubmitting ? 0.5 : 1 }}>
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </Button>
+              {showWarning && <WarningText>Please enter a playlist URL</WarningText>}
+            </div>
+            </TextForm>
+        </>
+        ) : (
+          <div>Please log in to Spotify to use this app.</div>
+        )}
+      </RandomContainer>
+    </>
   );
 }
 
@@ -281,10 +281,9 @@ function App() {
   return (
   <div>
     <p>
-      CS411 Section A2 Team 4: David Lee, Sean Lin, Taha Dawood 
+      Spotify Playlist Related Keywords (Section A2 Team 4: David Lee, Sean Lin, Taha Dawood)
     </p>
         <LogIn />
-
   </div>
   );
 }
